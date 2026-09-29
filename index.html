@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشاورین املاک قدس (کریمی)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+        body { font-family: 'Vazirmatn', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header -->
+    <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center md:text-right">
+                <h1 class="text-2xl font-bold">🏛️ مشاورین املاک قدس (کریمی)</h1>
+                <p class="text-sm text-blue-200 mt-1">ثبت درخواست مشتری، ثبت فایل ملک و پیگیری آسان</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-2">
+                <button onclick="switchTab('request')" id="btn-request" class="tab-btn bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium transition">ثبت درخواست مشتری</button>
+                <button onclick="switchTab('property')" id="btn-property" class="tab-btn bg-blue-800 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium transition">ثبت فایل ملک</button>
+                <button onclick="switchTab('listings')" id="btn-listings" class="tab-btn bg-blue-800 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium transition">فایل‌های ثبت‌شده</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-8">
+
+        <!-- TAB 1: ثبت درخواست مشتری -->
+        <section id="tab-request" class="tab-content bg-white p-6 rounded-2xl shadow-md border border-gray-100">
+            <h2 class="text-xl font-bold text-blue-900 mb-2 border-b pb-3">📌 ثبت درخواست مشتری</h2>
+            <p class="text-gray-600 mb-6 text-sm">چه ملکی دنبالش هستید؟ فرم را پر کنید تا مشاور با شما تماس بگیرد.</p>
+
+            <form id="form-request" onsubmit="handleRequestSubmit(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">نوع درخواست *</label>
+                        <select id="req-type" onchange="toggleReqFields()" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                            <option value="خرید">خرید</option>
+                            <option value="رهن و اجاره">رهن و اجاره</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">منطقه / محله مورد نظر</label>
+                        <input type="text" id="req-region" placeholder="مثلاً: بهاران، بلوار فاطمیه..." class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">متراژ تقریبی (مترمربع)</label>
+                        <input type="number" id="req-size" placeholder="مثلاً 100" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">تعداد اتاق</label>
+                        <input type="number" id="req-rooms" placeholder="مثلاً 2" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">تعداد نفرات</label>
+                        <input type="number" id="req-people" placeholder="مثلاً 4" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <!-- بودجه -->
+                <div id="buy-budget-container" class="grid grid-cols-1 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">حداکثر بودجه (تومان)</label>
+                        <input type="text" id="req-budget" placeholder="مثلاً 2,500,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div id="rent-budget-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">مبلغ رهن مورد نظر (تومان)</label>
+                        <input type="text" id="req-deposit" placeholder="مثلاً 200,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">اجاره ماهانه (تومان)</label>
+                        <input type="text" id="req-rent" placeholder="مثلاً 5,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">نام مشتری *</label>
+                        <input type="text" id="req-name" placeholder="نام و نام خانوادگی" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">شماره تماس *</label>
+                        <input type="tel" id="req-phone" placeholder="09123456789" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">توضیحات بیشتر</label>
+                    <textarea id="req-notes" rows="3" placeholder="هر نکته اضافه‌ای که به جستجوی ملک کمک می‌کند..." class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-xl transition shadow">ثبت درخواست</button>
+            </form>
+
+            <!-- ارسال به پیام‌رسان‌ها -->
+            <div id="share-options" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl hidden">
+                <p class="text-green-800 font-semibold mb-3">✅ درخواست شما ثبت شد! جهت پیگیری فوری می‌توانید متن را ارسال کنید:</p>
+                <div class="flex flex-wrap gap-3">
+                    <a id="link-whatsapp" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"><i class="fab font-bold fa-whatsapp"></i> ارسال در واتساپ</a>
+                    <a id="link-telegram" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"><i class="fab fa-telegram"></i> ارسال در تلگرام</a>
+                    <a id="link-eitaa" target="_blank" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">ارسال در ایتا</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: ثبت فایل ملک -->
+        <section id="tab-property" class="tab-content bg-white p-6 rounded-2xl shadow-md border border-gray-100 hidden">
+            <h2 class="text-xl font-bold text-blue-900 mb-2 border-b pb-3">🏡 ثبت فایل ملک</h2>
+            <p class="text-gray-600 mb-6 text-sm">مشخصات کامل ملک را جهت ثبت در دفتر وارد کنید.</p>
+
+            <form id="form-property" onsubmit="handlePropertySubmit(event)" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">نوع فایل *</label>
+                        <select id="prop-type" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                            <option value="فروش">فروش</option>
+                            <option value="رهن و اجاره">رهن و اجاره</option>
+                            <option value="مشارکت در ساخت">مشارکت در ساخت</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">نوع ملک *</label>
+                        <select id="prop-category" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                            <option value="آپارتمان">آپارتمان</option>
+                            <option value="ویلایی / خانه">ویلایی / خانه</option>
+                            <option value="مغازه / تجاری">مغازه / تجاری</option>
+                            <option value="زمین / کلنگی">زمین / کلنگی</option>
+                            <option value="کارگاهی / صنعتی">کارگاهی / صنعتی</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">متراژ (مترمربع)</label>
+                        <input type="number" id="prop-size" placeholder="مثلاً 120" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">تعداد خواب</label>
+                        <input type="number" id="prop-rooms" placeholder="مثلاً 2" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">طبقه / تعداد طبقات</label>
+                        <input type="text" id="prop-floor" placeholder="مثلاً طبقه 2 از 4" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">قیمت کل / رهن (تومان)</label>
+                        <input type="text" id="prop-price" placeholder="مثلاً 3,200,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">اجاره ماهانه (در صورت اجاری بودن)</label>
+                        <input type="text" id="prop-rent-price" placeholder="مثلاً 4,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">منطقه / آدرس ملک *</label>
+                        <input type="text" id="prop-address" placeholder="مثلاً: بلوار فاطمیه، کوچه بهاران" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">وضعیت سند</label>
+                        <select id="prop-document" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="دارد">دارد (تک‌برگ/منگوله‌دار)</option>
+                            <option value="ندارد">ندارد / قولنامه‌ای</option>
+                            <option value="در دست اقدام">در دست اقدام</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">نام مالک / خریدار *</label>
+                        <input type="text" id="prop-owner" placeholder="نام مالک" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">شماره تماس مالک *</label>
+                        <input type="tel" id="prop-owner-phone" placeholder="09183678017" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-1">توضیحات و امکانات (پارکینگ، آسانسور، انباری، سرمایش/گرمایش...)</label>
+                    <textarea id="prop-features" rows="3" placeholder="امکانات، مشخصات و خصوصیات ملک را وارد کنید..." class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-xl transition shadow">ثبت فایل ملک</button>
+            </form>
+        </section>
+
+        <!-- TAB 3: فایل‌های ثبت‌شده -->
+        <section id="tab-listings" class="tab-content bg-white p-6 rounded-2xl shadow-md border border-gray-100 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b pb-4">
+                <h2 class="text-xl font-bold text-blue-900">📂 فایل‌های ثبت‌شده</h2>
+                <div class="flex gap-2">
+                    <button onclick="filterListings('همه')" class="px-3 py-1.5 text-sm bg-gray-200 hover:bg-gray-300 rounded-lg font-medium">همه</button>
+                    <button onclick="filterListings('فروش')" class="px-3 py-1.5 text-sm bg-blue-100 text-blue-800 hover:bg-blue-200 rounded-lg font-medium">فروش</button>
+                    <button onclick="filterListings('رهن و اجاره')" class="px-3 py-1.5 text-sm bg-green-100 text-green-800 hover:bg-green-200 rounded-lg font-medium">رهن و اجاره</button>
+                </div>
+            </div>
+
+            <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- لیست به صورت دینامیک جایگذاری می‌شود -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer & Contact -->
+    <footer class="bg-gray-900 text-gray-300 mt-12 py-8 border-t border-gray-800">
+        <div class="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-right">
+            <div>
+                <h3 class="text-lg font-bold text-white mb-2">📞 تماس با دفتر</h3>
+                <p class="text-sm">086-33661572</p>
+                <p class="text-sm">09183678017 | 09120946501</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white mb-2">📍 آدرس دفتر</h3>
+                <p class="text-sm">بلوار فاطمیه، روبروی بانک ملت، بهاران ۱۱</p>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-white mb-2">🌐 ارتباط در شبکه اجتماعی</h3>
+                <p class="text-sm">اینستاگرام: <a href="https://instagram.com/amlak_ghods" class="text-blue-400 hover:underline">amlak_ghods@</a></p>
+                <p class="text-sm">واتساپ: <a href="https://wa.me/989351891081" class="text-green-400 hover:underline">09351891081</a></p>
+            </div>
+        </div>
+        <div class="text-center text-xs text-gray-500 mt-8 border-t border-gray-800 pt-4">
+            © تمامی حقوق برای مشاورین املاک قدس (کریمی) محفوظ است.
+        </div>
+    </footer>
+
+    <!-- JS Logic -->
+    <script>
+        // مدیریت تب‌ها
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabName).classList.remove('hidden');
+            if(tabName === 'listings') renderListings();
+        }
+
+        function toggleReqFields() {
+            const type = document.getElementById('req-type').value;
+            if(type === 'خرید') {
+                document.getElementById('buy-budget-container').classList.remove('hidden');
+                document.getElementById('rent-budget-container').classList.add('hidden');
+            } else {
+                document.getElementById('buy-budget-container').classList.add('hidden');
+                document.getElementById('rent-budget-container').classList.remove('hidden');
+            }
+        }
+
+        // ذخیره درخواست
+        function handleRequestSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('req-name').value;
+            const phone = document.getElementById('req-phone').value;
+            const type = document.getElementById('req-type').value;
+            const region = document.getElementById('req-region').value;
+
+            const text = `سلام، درخواست ${type} ملک توسط ${name} (${phone}) - منطقه: ${region}`;
+            const encoded = encodeURIComponent(text);
+
+            document.getElementById('link-whatsapp').href = `https://wa.me/989351891081?text=${encoded}`;
+            document.getElementById('link-telegram').href = `https://t.me/share/url?url=&text=${encoded}`;
+            document.getElementById('link-eitaa').href = `https://eitaa.com/share/url?text=${encoded}`;
+
+            document.getElementById('share-options').classList.remove('hidden');
+        }
+
+        // ذخیره ملک در LocalStorage
+        function handlePropertySubmit(e) {
+            e.preventDefault();
+            const property = {
+                id: Date.now(),
+                type: document.getElementById('prop-type').value,
+                category: document.getElementById('prop-category').value,
+                size: document.getElementById('prop-size').value,
+                rooms: document.getElementById('prop-rooms').value,
+                price: document.getElementById('prop-price').value,
+                address: document.getElementById('prop-address').value,
+                owner: document.getElementById('prop-owner').value,
+                phone: document.getElementById('prop-owner-phone').value,
+                features: document.getElementById('prop-features').value,
+                date: new Date().toLocaleDateString('fa-IR')
+            };
+
+            let properties = JSON.parse(localStorage.getItem('properties') || '[]');
+            properties.unshift(property);
+            localStorage.setItem('properties', JSON.stringify(properties));
+
+            alert('فایل ملک با موفقیت ثبت شد!');
+            document.getElementById('form-property').reset();
+            switchTab('listings');
+        }
+
+        // نمایش لیست فایل‌ها
+        function renderListings(filter = 'همه') {
+            const container = document.getElementById('listings-container');
+            let properties = JSON.parse(localStorage.getItem('properties') || '[]');
+
+            if(filter !== 'همه') {
+                properties = properties.filter(p => p.type === filter);
+            }
+
+            if(properties.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center col-span-2 py-8">هیچ فایلی ثبت نشده است.</p>';
+                return;
+            }
+
+            container.innerHTML = properties.map(p => `
+                <div class="border rounded-xl p-4 bg-gray-50 hover:shadow-md transition relative">
+                    <span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-md ${p.type === 'فروش' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'} mb-2">${p.type} - ${p.category}</span>
+                    <h3 class="font-bold text-gray-800 text-base mb-1">${p.address}</h3>
+                    <p class="text-sm text-gray-600 mb-1">📐 متراژ: ${p.size || '---'} متر | 🛏️ خواب: ${p.rooms || '---'}</p>
+                    <p class="text-sm font-semibold text-blue-900 mb-2">💰 قیمت/رهن: ${p.price || 'توافقی'} تومان</p>
+                    <p class="text-xs text-gray-500 mb-2">📝 توضیحات: ${p.features || 'بدون توضیحات'}</p>
+                    <div class="text-xs text-gray-400 border-t pt-2 flex justify-between items-center">
+                        <span>👤 مالک: ${p.owner} (${p.phone})</span>
+                        <span>📅 ${p.date}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterListings(category) {
+            renderListings(category);
+        }
+    </script>
+</body>
+</html>
