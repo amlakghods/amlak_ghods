@@ -187,27 +187,24 @@
         // State Management
         let appState = {
             isAdmin: false,
-            activeTab: 'files', // files, requests, register
-            regType: 'file', // file, request
+            activeTab: 'files',
+            regType: 'file',
             logoClicks: 0,
             clickTimer: null,
             files: JSON.parse(localStorage.getItem('ag_files') || '[]'),
             requests: JSON.parse(localStorage.getItem('ag_requests') || '[]')
         };
 
-        // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
             renderApp();
             buildForm();
         });
 
-        // Save State to LocalStorage
         function saveData() {
             localStorage.setItem('ag_files', JSON.stringify(appState.files));
             localStorage.setItem('ag_requests', JSON.stringify(appState.requests));
         }
 
-        // Hidden Admin Login Trigger (5 Clicks)
         function handleLogoClick() {
             appState.logoClicks++;
             clearTimeout(appState.clickTimer);
@@ -237,7 +234,6 @@
             renderApp();
         }
 
-        // Navigation Switcher
         function switchTab(tab) {
             appState.activeTab = tab;
             ['files', 'requests', 'register'].forEach(t => {
@@ -268,7 +264,6 @@
             buildForm();
         }
 
-        // Format Currency Helper (3-digits comma separator)
         function formatCurrencyInput(e) {
             let val = e.value.replace(/,/g, '').replace(/\D/g, '');
             if (val) {
@@ -278,11 +273,9 @@
             }
         }
 
-        // Render List Elements
         function renderApp() {
             const searchQuery = (document.getElementById('admin-search-input')?.value || '').trim().toLowerCase();
 
-            // Render Files List
             const filesContainer = document.getElementById('files-container');
             filesContainer.innerHTML = '';
             
@@ -341,7 +334,6 @@
                 });
             }
 
-            // Render Requests List
             const requestsContainer = document.getElementById('requests-container');
             requestsContainer.innerHTML = '';
 
@@ -380,13 +372,11 @@
             }
         }
 
-        // BUILD DYNAMIC FORM LOGIC
         function buildForm() {
             const container = document.getElementById('form-fields');
             container.innerHTML = '';
 
             if (appState.regType === 'file') {
-                // FILE REGISTRATION FIELDS
                 container.innerHTML = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -406,7 +396,6 @@
                 `;
                 updateSubCats();
             } else {
-                // REQUEST REGISTRATION FIELDS
                 container.innerHTML = `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -579,7 +568,6 @@
 
             fieldsHTML += '</div>';
 
-            // Prices Section
             if (dealType === 'فروش' || dealType === 'مشارکت در ساخت') {
                 fieldsHTML += `
                     <div>
@@ -602,7 +590,6 @@
                 `;
             }
 
-            // Region & Contact
             fieldsHTML += `
                 <div class="space-y-3 pt-2 border-t border-gray-100">
                     <div>
@@ -621,7 +608,6 @@
                         <textarea id="f-desc" rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none"></textarea>
                     </div>
 
-                    <!-- Sensitive Fields (Hidden from Public) -->
                     <div class="bg-amber-50 p-3 rounded-xl border border-amber-200/80 space-y-3">
                         <p class="text-xs font-bold text-amber-900 flex items-center"><i class="fas fa-lock text-amber-600 ml-1"></i> اطلاعات محرمانه (فقط مدیر می‌بیند):</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -679,7 +665,6 @@
 
             fieldsHTML += '</div>';
 
-            // Budget Section
             if (reqType === 'خرید' || reqType === 'مشارکت در ساخت') {
                 fieldsHTML += `
                     <div>
@@ -709,7 +694,6 @@
                         <textarea id="r-desc" rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-xl text-sm focus:outline-none"></textarea>
                     </div>
 
-                    <!-- Sensitive Client Info -->
                     <div class="bg-amber-50 p-3 rounded-xl border border-amber-200/80 space-y-3">
                         <p class="text-xs font-bold text-amber-900 flex items-center"><i class="fas fa-lock text-amber-600 ml-1"></i> اطلاعات محرمانه مشتری (فقط مدیر می‌بیند):</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -729,14 +713,13 @@
             box.innerHTML = fieldsHTML;
         }
 
-        // Photo Upload Handler (Max 5 Image Base64)
         let uploadedPhotos = [];
         function handlePhotoUpload(input) {
             uploadedPhotos = [];
             const preview = document.getElementById('photo-preview');
             preview.innerHTML = '';
 
-            const files = Array.from(input.files).slice(0, 5); // Max 5
+            const files = Array.from(input.files).slice(0, 5);
             files.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -750,7 +733,6 @@
             });
         }
 
-        // Generate Automated Code (AG01, AK01)
         function generateCode(type) {
             const prefix = type === 'file' ? 'AG' : 'AK';
             const list = type === 'file' ? appState.files : appState.requests;
@@ -758,7 +740,6 @@
             return `${prefix}${num < 10 ? '0' + num : num}`;
         }
 
-        // Form Submission Logic
         function handleFormSubmit(e) {
             e.preventDefault();
 
@@ -782,7 +763,6 @@
                     ownerName: document.getElementById('f-owner-name')?.value || '',
                     ownerPhone: document.getElementById('f-owner-phone')?.value || '',
                     addressExact: document.getElementById('f-address-exact')?.value || '',
-                    // Dynamic Specs
                     area: document.getElementById('f-area')?.value || '',
                     floor: document.getElementById('f-floor')?.value || '',
                     rooms: document.getElementById('f-rooms')?.value || ''
@@ -818,13 +798,11 @@
             }
         }
 
-        // Open Property Modal (Hide/Show Private Info Based on Admin Status)
         function openModal(item, type) {
             const modal = document.getElementById('details-modal');
             document.getElementById('modal-code').innerText = `کد آگهی: ${item.code}`;
             document.getElementById('modal-title').innerText = type === 'file' ? `${item.dealType} ${item.subCategory}` : `درخواست ${item.reqType} ${item.subCategory || ''}`;
 
-            // Gallery
             const galleryContainer = document.getElementById('modal-gallery-container');
             const gallery = document.getElementById('modal-gallery');
             gallery.innerHTML = '';
@@ -841,7 +819,6 @@
                 galleryContainer.classList.add('hidden');
             }
 
-            // Specs Grid
             const grid = document.getElementById('modal-details-grid');
             grid.innerHTML = '';
             
@@ -857,7 +834,6 @@
                 if (item.budget) grid.innerHTML += `<div><span class="text-gray-500 text-xs">بودجه:</span> <p class="font-bold text-gold-600">${item.budget} تومان</p></div>`;
             }
 
-            // Description
             const descContainer = document.getElementById('modal-desc-container');
             if (item.desc) {
                 descContainer.classList.remove('hidden');
@@ -866,7 +842,6 @@
                 descContainer.classList.add('hidden');
             }
 
-            // Map link
             const locContainer = document.getElementById('modal-location-container');
             if (item.region) {
                 locContainer.classList.remove('hidden');
@@ -875,7 +850,6 @@
                 locContainer.classList.add('hidden');
             }
 
-            // ADMIN EXCLUSIVE SECTION (Strictly Hidden for Public)
             const adminBox = document.getElementById('modal-admin-box');
             if (appState.isAdmin) {
                 adminBox.classList.remove('hidden');
@@ -908,7 +882,6 @@
             document.getElementById('lightbox').classList.add('hidden');
         }
 
-        // Export Data Backup
         function exportData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState));
             const dlAnchorElem = document.createElement('a');
