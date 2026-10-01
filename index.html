@@ -1,345 +1,1489 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مشاورین املاک قدس (کریمی)</title>
+    <title>سامانه تخصصی املاک قدس</title>
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            800: '#0f172a',
+                            900: '#0a0f1d',
+                            950: '#050811',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                            700: '#b45309',
+                            gradient: 'linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%)'
+                        }
+                    },
+                    fontFamily: {
+                        vazir: ['Vazirmatn', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Vazirmatn Font & Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
-        body { font-family: 'Vazirmatn', sans-serif; }
+        * {
+            font-family: 'Vazirmatn', sans-serif;
+            box-sizing: border-box;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d97706;
+            border-radius: 4px;
+        }
+
+        .gold-border-glow {
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.25);
+        }
+
+        .gold-text-glow {
+            text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .gold-button {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            transition: all 0.3s ease;
+        }
+
+        .gold-button:hover {
+            background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .card-zoom-img {
+            transition: transform 0.5s ease;
+        }
+
+        .group:hover .card-zoom-img {
+            transform: scale(1.08);
+        }
+
+        /* Toast Alert Popup */
+        #toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+            z-index: 9999;
+            opacity: 0;
+        }
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
 
-    <!-- Header -->
-    <header class="bg-blue-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="text-center md:text-right">
-                <h1 class="text-2xl font-bold">🏛️ مشاورین املاک قدس (کریمی)</h1>
-                <p class="text-sm text-blue-200 mt-1">ثبت درخواست مشتری، ثبت فایل ملک و پیگیری آسان</p>
+<body class="bg-navy-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-gold-500 selection:text-navy-900">
+
+    <!-- MAIN HEADER -->
+    <header class="sticky top-0 z-40 bg-navy-900/90 backdrop-blur-md border-b border-gold-600/30 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo & Title with 5-Click Admin Secret Trigger -->
+            <div id="secretLogoTrigger" class="flex items-center gap-3 cursor-pointer select-none group py-2 px-3 rounded-2xl transition hover:bg-navy-800/60" title="۵ بار کلیک برای ورود به پنل مدیریت">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-gold-600 to-amber-300 p-0.5 shadow-lg group-hover:scale-105 transition">
+                    <div class="w-full h-full bg-navy-900 rounded-[14px] flex items-center justify-center">
+                        <i class="fa-solid fa-building-columns text-gold-400 text-2xl group-hover:rotate-12 transition"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+                        املاک <span class="text-transparent bg-clip-text bg-gradient-to-r from-gold-400 via-amber-300 to-gold-600 gold-text-glow">قدس</span>
+                    </h1>
+                    <p class="text-xs text-gold-400/80 font-medium tracking-wide">سامانه هوشمند و جامع معاملات املاک</p>
+                </div>
             </div>
-            <div class="flex flex-wrap justify-center gap-2">
-                <button onclick="switchTab('request')" id="btn-request" class="tab-btn bg-blue-700 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium transition">ثبت درخواست مشتری</button>
-                <button onclick="switchTab('property')" id="btn-property" class="tab-btn bg-blue-800 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium transition">ثبت فایل ملک</button>
-                <button onclick="switchTab('listings')" id="btn-listings" class="tab-btn bg-blue-800 hover:bg-blue-600 px-4 py-2 rounded-lg font-medium transition">فایل‌های ثبت‌شده</button>
+
+            <!-- Quick Contact Badge -->
+            <div class="hidden md:flex items-center gap-4">
+                <a href="tel:09120000000" class="flex items-center gap-3 bg-navy-800 border border-gold-600/40 hover:border-gold-400 text-gold-400 px-4 py-2 rounded-xl text-sm font-bold transition shadow-md hover:shadow-gold-500/20">
+                    <div class="w-8 h-8 rounded-lg bg-gold-500/10 flex items-center justify-center text-gold-400">
+                        <i class="fa-solid fa-phone-volume animate-pulse"></i>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-[10px] text-slate-400 font-normal">ارتباط با مدیریت:</div>
+                        <div class="text-gold-400 tracking-wider dir-ltr font-black">0912 000 0000</div>
+                    </div>
+                </a>
             </div>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 py-8">
-
-        <!-- TAB 1: ثبت درخواست مشتری -->
-        <section id="tab-request" class="tab-content bg-white p-6 rounded-2xl shadow-md border border-gray-100">
-            <h2 class="text-xl font-bold text-blue-900 mb-2 border-b pb-3">📌 ثبت درخواست مشتری</h2>
-            <p class="text-gray-600 mb-6 text-sm">چه ملکی دنبالش هستید؟ فرم را پر کنید تا مشاور با شما تماس بگیرد.</p>
-
-            <form id="form-request" onsubmit="handleRequestSubmit(event)" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">نوع درخواست *</label>
-                        <select id="req-type" onchange="toggleReqFields()" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
-                            <option value="خرید">خرید</option>
-                            <option value="رهن و اجاره">رهن و اجاره</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">منطقه / محله مورد نظر</label>
-                        <input type="text" id="req-region" placeholder="مثلاً: بهاران، بلوار فاطمیه..." class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">متراژ تقریبی (مترمربع)</label>
-                        <input type="number" id="req-size" placeholder="مثلاً 100" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">تعداد اتاق</label>
-                        <input type="number" id="req-rooms" placeholder="مثلاً 2" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">تعداد نفرات</label>
-                        <input type="number" id="req-people" placeholder="مثلاً 4" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                </div>
-
-                <!-- بودجه -->
-                <div id="buy-budget-container" class="grid grid-cols-1 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">حداکثر بودجه (تومان)</label>
-                        <input type="text" id="req-budget" placeholder="مثلاً 2,500,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                </div>
-
-                <div id="rent-budget-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">مبلغ رهن مورد نظر (تومان)</label>
-                        <input type="text" id="req-deposit" placeholder="مثلاً 200,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">اجاره ماهانه (تومان)</label>
-                        <input type="text" id="req-rent" placeholder="مثلاً 5,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">نام مشتری *</label>
-                        <input type="text" id="req-name" placeholder="نام و نام خانوادگی" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">شماره تماس *</label>
-                        <input type="tel" id="req-phone" placeholder="09123456789" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1">توضیحات بیشتر</label>
-                    <textarea id="req-notes" rows="3" placeholder="هر نکته اضافه‌ای که به جستجوی ملک کمک می‌کند..." class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
-                </div>
-
-                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-xl transition shadow">ثبت درخواست</button>
-            </form>
-
-            <!-- ارسال به پیام‌رسان‌ها -->
-            <div id="share-options" class="mt-6 p-4 bg-green-50 border border-green-200 rounded-xl hidden">
-                <p class="text-green-800 font-semibold mb-3">✅ درخواست شما ثبت شد! جهت پیگیری فوری می‌توانید متن را ارسال کنید:</p>
-                <div class="flex flex-wrap gap-3">
-                    <a id="link-whatsapp" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"><i class="fab font-bold fa-whatsapp"></i> ارسال در واتساپ</a>
-                    <a id="link-telegram" target="_blank" class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2"><i class="fab fa-telegram"></i> ارسال در تلگرام</a>
-                    <a id="link-eitaa" target="_blank" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">ارسال در ایتا</a>
-                </div>
+    <!-- TAB NAVIGATION BAR -->
+    <nav class="bg-navy-900 border-b border-slate-800 sticky top-20 z-30 shadow-lg">
+        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div class="flex overflow-x-auto no-scrollbar gap-1 sm:gap-2 py-3">
+                <button onclick="switchTab('listings')" id="tab-listings" class="tab-btn flex-1 min-w-[130px] sm:min-w-[160px] py-3 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 bg-gold-500 text-navy-950 shadow-lg gold-border-glow">
+                    <i class="fa-solid fa-house-circle-check text-base"></i>
+                    فایل‌های ثبت شده
+                </button>
+                <button onclick="switchTab('requests')" id="tab-requests" class="tab-btn flex-1 min-w-[130px] sm:min-w-[160px] py-3 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 bg-navy-800 text-slate-300 hover:bg-navy-700 hover:text-white border border-slate-700/60">
+                    <i class="fa-solid fa-clipboard-list text-base"></i>
+                    درخواست‌های مشتری
+                </button>
+                <button onclick="switchTab('add-listing')" id="tab-add-listing" class="tab-btn flex-1 min-w-[130px] sm:min-w-[160px] py-3 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 bg-navy-800 text-slate-300 hover:bg-navy-700 hover:text-white border border-slate-700/60">
+                    <i class="fa-solid fa-plus-circle text-base text-gold-400"></i>
+                    ثبت فایل ملک
+                </button>
+                <button onclick="switchTab('add-request')" id="tab-add-request" class="tab-btn flex-1 min-w-[130px] sm:min-w-[160px] py-3 px-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all duration-300 bg-navy-800 text-slate-300 hover:bg-navy-700 hover:text-white border border-slate-700/60">
+                    <i class="fa-solid fa-user-plus text-base text-amber-400"></i>
+                    ثبت درخواست مشتری
+                </button>
+                <button onclick="openAdminModal()" id="tab-admin-badge" class="hidden sm:flex py-3 px-4 rounded-xl font-bold text-xs sm:text-sm items-center justify-center gap-2 bg-rose-950/60 text-rose-300 border border-rose-600/40 hover:bg-rose-900 transition">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span id="adminBadgeText">ورود مدیریت</span>
+                </button>
             </div>
-        </section>
+        </div>
+    </nav>
 
-        <!-- TAB 2: ثبت فایل ملک -->
-        <section id="tab-property" class="tab-content bg-white p-6 rounded-2xl shadow-md border border-gray-100 hidden">
-            <h2 class="text-xl font-bold text-blue-900 mb-2 border-b pb-3">🏡 ثبت فایل ملک</h2>
-            <p class="text-gray-600 mb-6 text-sm">مشخصات کامل ملک را جهت ثبت در دفتر وارد کنید.</p>
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
 
-            <form id="form-property" onsubmit="handlePropertySubmit(event)" class="space-y-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">نوع فایل *</label>
-                        <select id="prop-type" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
-                            <option value="فروش">فروش</option>
-                            <option value="رهن و اجاره">رهن و اجاره</option>
-                            <option value="مشارکت در ساخت">مشارکت در ساخت</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">نوع ملک *</label>
-                        <select id="prop-category" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
-                            <option value="آپارتمان">آپارتمان</option>
-                            <option value="ویلایی / خانه">ویلایی / خانه</option>
-                            <option value="مغازه / تجاری">مغازه / تجاری</option>
-                            <option value="زمین / کلنگی">زمین / کلنگی</option>
-                            <option value="کارگاهی / صنعتی">کارگاهی / صنعتی</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">متراژ (مترمربع)</label>
-                        <input type="number" id="prop-size" placeholder="مثلاً 120" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">تعداد خواب</label>
-                        <input type="number" id="prop-rooms" placeholder="مثلاً 2" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">طبقه / تعداد طبقات</label>
-                        <input type="text" id="prop-floor" placeholder="مثلاً طبقه 2 از 4" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">قیمت کل / رهن (تومان)</label>
-                        <input type="text" id="prop-price" placeholder="مثلاً 3,200,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">اجاره ماهانه (در صورت اجاری بودن)</label>
-                        <input type="text" id="prop-rent-price" placeholder="مثلاً 4,000,000" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">منطقه / آدرس ملک *</label>
-                        <input type="text" id="prop-address" placeholder="مثلاً: بلوار فاطمیه، کوچه بهاران" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">وضعیت سند</label>
-                        <select id="prop-document" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none">
-                            <option value="دارد">دارد (تک‌برگ/منگوله‌دار)</option>
-                            <option value="ندارد">ندارد / قولنامه‌ای</option>
-                            <option value="در دست اقدام">در دست اقدام</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">نام مالک / خریدار *</label>
-                        <input type="text" id="prop-owner" placeholder="نام مالک" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">شماره تماس مالک *</label>
-                        <input type="tel" id="prop-owner-phone" placeholder="09183678017" class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none" required>
-                    </div>
-                </div>
-
+        <!-- SECTION 1: PUBLIC PROPERTY LISTINGS (فایل‌های ثبت شده) -->
+        <section id="section-listings" class="tab-content block">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
-                    <label class="block text-sm font-medium mb-1">توضیحات و امکانات (پارکینگ، آسانسور، انباری، سرمایش/گرمایش...)</label>
-                    <textarea id="prop-features" rows="3" placeholder="امکانات، مشخصات و خصوصیات ملک را وارد کنید..." class="w-full border rounded-lg p-2.5 bg-gray-50 focus:ring-2 focus:ring-blue-500 outline-none"></textarea>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3">
+                        <span class="w-3 h-8 bg-gold-500 rounded-full inline-block"></span>
+                        فایل‌های فعال املاک قدس
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-1">مشاهده و بررسی تمامی املاک ثبت شده با مشخصات کامل کارشناسی</p>
                 </div>
-
-                <button type="submit" class="w-full bg-blue-900 hover:bg-blue-800 text-white font-bold py-3 rounded-xl transition shadow">ثبت فایل ملک</button>
-            </form>
-        </section>
-
-        <!-- TAB 3: فایل‌های ثبت‌شده -->
-        <section id="tab-listings" class="tab-content bg-white p-6 rounded-2xl shadow-md border border-gray-100 hidden">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 border-b pb-4">
-                <h2 class="text-xl font-bold text-blue-900">📂 فایل‌های ثبت‌شده</h2>
-                <div class="flex gap-2">
-                    <button onclick="filterListings('همه')" class="px-3 py-1.5 text-sm bg-gray-200 hover:bg-gray-300 rounded-lg font-medium">همه</button>
-                    <button onclick="filterListings('فروش')" class="px-3 py-1.5 text-sm bg-blue-100 text-blue-800 hover:bg-blue-200 rounded-lg font-medium">فروش</button>
-                    <button onclick="filterListings('رهن و اجاره')" class="px-3 py-1.5 text-sm bg-green-100 text-green-800 hover:bg-green-200 rounded-lg font-medium">رهن و اجاره</button>
+                
+                <!-- Search & Filters -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="relative flex-grow md:flex-grow-0 min-w-[200px]">
+                        <input type="text" id="publicSearchInput" oninput="filterPublicListings()" placeholder="جستجو در منطقه یا متراژ..." class="w-full bg-navy-900 border border-slate-700 text-sm rounded-xl py-2.5 px-4 pr-10 focus:outline-none focus:border-gold-500 text-white placeholder-slate-500">
+                        <i class="fa-solid fa-search absolute right-3.5 top-3.5 text-slate-500 text-sm"></i>
+                    </div>
+                    <select id="publicFilterCategory" onchange="filterPublicListings()" class="bg-navy-900 border border-slate-700 text-sm rounded-xl py-2.5 px-3 text-slate-200 focus:outline-none focus:border-gold-500">
+                        <option value="all">همه معامله‌ها</option>
+                        <option value="فروش">فروش</option>
+                        <option value="رهن و اجاره">رهن و اجاره</option>
+                        <option value="مشارکت در ساخت">مشارکت در ساخت</option>
+                    </select>
                 </div>
             </div>
 
-            <div id="listings-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- لیست به صورت دینامیک جایگذاری می‌شود -->
+            <!-- Property Grid -->
+            <div id="listingsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated listings cards will appear here -->
+            </div>
+            
+            <div id="emptyListings" class="hidden text-center py-16 bg-navy-900/50 rounded-3xl border border-dashed border-slate-800">
+                <i class="fa-solid fa-building-circle-xmark text-5xl text-slate-600 mb-4"></i>
+                <p class="text-slate-400 font-medium">هیچ فایلی با مشخصات درخواستی یافت نشد.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 2: PUBLIC CLIENT REQUESTS (درخواست‌های مشتری) -->
+        <section id="section-requests" class="tab-content hidden">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3">
+                        <span class="w-3 h-8 bg-amber-500 rounded-full inline-block"></span>
+                        متقاضیان و درخواست‌های مشتریان
+                    </h2>
+                    <p class="text-slate-400 text-sm mt-1">لیست نیازهای خریداران و مستاجران جهت برقراری ارتباط و تطبیق فایل</p>
+                </div>
+                <div class="relative min-w-[220px]">
+                    <input type="text" id="requestSearchInput" oninput="filterPublicRequests()" placeholder="جستجو در منطقه یا نوع ملک..." class="w-full bg-navy-900 border border-slate-700 text-sm rounded-xl py-2.5 px-4 pr-10 focus:outline-none focus:border-amber-500 text-white placeholder-slate-500">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3.5 text-slate-500 text-sm"></i>
+                </div>
+            </div>
+
+            <div id="requestsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated request cards -->
+            </div>
+
+            <div id="emptyRequests" class="hidden text-center py-16 bg-navy-900/50 rounded-3xl border border-dashed border-slate-800">
+                <i class="fa-solid fa-user-slash text-5xl text-slate-600 mb-4"></i>
+                <p class="text-slate-400 font-medium">هیچ درخواستی هنوز ثبت نشده است.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: ADD PROPERTY LISTING (ثبت فایل ملک) -->
+        <section id="section-add-listing" class="tab-content hidden">
+            <div class="max-w-4xl mx-auto bg-navy-900/90 rounded-3xl border border-gold-600/30 p-6 sm:p-10 shadow-2xl glass-panel">
+                <div class="border-b border-slate-800 pb-6 mb-8 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                            <i class="fa-solid fa-file-circle-plus text-gold-400"></i>
+                            ثبت فایل ملک جدید
+                        </h2>
+                        <p class="text-slate-400 text-xs sm:text-sm mt-1">اطلاعات ملک را دقیق وارد کنید. سیستم کد اختصاصی تولید خواهد کرد.</p>
+                    </div>
+                    <span id="generatedListingCodeBadge" class="bg-gold-500/10 border border-gold-500/40 text-gold-400 font-extrabold text-sm px-4 py-2 rounded-xl dir-ltr tracking-wider">
+                        کد: AG01
+                    </span>
+                </div>
+
+                <form id="listingForm" onsubmit="handleSaveListing(event)" class="space-y-6">
+                    <!-- Main Category Selectors -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-navy-950/70 p-4 rounded-2xl border border-slate-800">
+                        <div>
+                            <label class="block text-xs font-bold text-gold-400 mb-2">نوع معامله (فیلد اصلی) *</label>
+                            <select id="listingDealType" onchange="renderDynamicListingForm()" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-3 text-sm focus:border-gold-500 focus:outline-none">
+                                <option value="فروش">فروش</option>
+                                <option value="رهن و اجاره">رهن و اجاره</option>
+                                <option value="مشارکت در ساخت">مشارکت در ساخت</option>
+                            </select>
+                        </div>
+                        <div id="listingCategoryWrapper">
+                            <label class="block text-xs font-bold text-gold-400 mb-2">نوع ملک *</label>
+                            <select id="listingCategory" onchange="renderDynamicListingForm()" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-3 text-sm focus:border-gold-500 focus:outline-none">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Fields Container -->
+                    <div id="dynamicListingFields" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Dynamic inputs injected here via JavaScript -->
+                    </div>
+
+                    <!-- Photo Upload Field (Max 5 Photos) -->
+                    <div class="bg-navy-950/70 p-5 rounded-2xl border border-slate-800">
+                        <label class="block text-xs font-bold text-gold-400 mb-2">
+                            <i class="fa-solid fa-camera text-sm ml-1"></i>
+                            عکس‌های ملک (حداکثر ۵ عدد)
+                        </label>
+                        <input type="file" id="listingPhotos" multiple accept="image/*" onchange="handleImageSelection(event)" class="hidden">
+                        <div onclick="document.getElementById('listingPhotos').click()" class="border-2 border-dashed border-slate-700 hover:border-gold-500/60 rounded-xl p-6 text-center cursor-pointer transition bg-navy-900/40 group">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-500 group-hover:text-gold-400 transition mb-2"></i>
+                            <p class="text-xs text-slate-300 font-medium">برای انتخاب تصاویر کلیک کنید یا عکس‌ها را بکشید اینجا</p>
+                            <p class="text-[10px] text-slate-500 mt-1">فرمت‌های مجاز: JPG, PNG, WEBP (تا ۵ عکس)</p>
+                        </div>
+                        <!-- Photo Previews Container -->
+                        <div id="photoPreviewContainer" class="flex flex-wrap gap-3 mt-4"></div>
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-2">توضیحات و امکانات بیشتر ملک</label>
+                        <textarea id="listingDescription" rows="3" placeholder="امکانات نظیر کابینت هایگلاس، نورگیر، بازسازی شده، ویو عالی و..." class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-3 text-sm focus:border-gold-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <!-- Confidential Owner Section (Only Visible in Admin) -->
+                    <div class="bg-rose-950/20 border border-rose-900/40 p-5 rounded-2xl">
+                        <div class="flex items-center gap-2 mb-3 text-rose-400 font-bold text-xs">
+                            <i class="fa-solid fa-lock"></i>
+                            اطلاعات اختصاصی مالک (برای عموم کاربران مخفی خواهد بود)
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">نام مالک *</label>
+                                <input type="text" id="ownerName" required placeholder="مثال: آقای کریمی" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm focus:border-gold-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">شماره تماس مالک *</label>
+                                <input type="tel" id="ownerPhone" required placeholder="0912xxxxxxx" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm dir-ltr focus:border-gold-500 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-4">
+                        <button type="submit" class="w-full gold-button text-navy-950 font-black py-4 rounded-xl text-base shadow-xl flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-check-circle text-lg"></i>
+                            ثبت نهایی فایل ملک در سیستم
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- SECTION 4: ADD CLIENT REQUEST (ثبت درخواست مشتری) -->
+        <section id="section-add-request" class="tab-content hidden">
+            <div class="max-w-3xl mx-auto bg-navy-900/90 rounded-3xl border border-amber-500/30 p-6 sm:p-10 shadow-2xl glass-panel">
+                <div class="border-b border-slate-800 pb-6 mb-8 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-black text-white flex items-center gap-3">
+                            <i class="fa-solid fa-user-tag text-amber-400"></i>
+                            ثبت درخواست متقاضی جدید
+                        </h2>
+                        <p class="text-slate-400 text-xs sm:text-sm mt-1">ثبت سفارش خرید یا اجاره جهت پیشنهاد خودکار ملک‌های مناسب</p>
+                    </div>
+                    <span id="generatedRequestCodeBadge" class="bg-amber-500/10 border border-amber-500/40 text-amber-400 font-extrabold text-sm px-4 py-2 rounded-xl dir-ltr tracking-wider">
+                        کد: AK01
+                    </span>
+                </div>
+
+                <form id="requestForm" onsubmit="handleSaveRequest(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-navy-950/70 p-4 rounded-2xl border border-slate-800">
+                        <div>
+                            <label class="block text-xs font-bold text-amber-400 mb-2">نوع درخواست (اصلی) *</label>
+                            <select id="reqDealType" onchange="renderDynamicRequestForm()" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-3 text-sm focus:border-amber-500 focus:outline-none">
+                                <option value="خرید">خرید</option>
+                                <option value="رهن و اجاره">رهن و اجاره</option>
+                                <option value="مشارکت در ساخت">مشارکت در ساخت</option>
+                            </select>
+                        </div>
+                        <div id="reqCategoryWrapper">
+                            <label class="block text-xs font-bold text-amber-400 mb-2">نوع ملک مورد نظر *</label>
+                            <select id="reqCategory" onchange="renderDynamicRequestForm()" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-3 text-sm focus:border-amber-500 focus:outline-none">
+                                <!-- Populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Request Fields Container -->
+                    <div id="dynamicRequestFields" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Dynamic fields injected here -->
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-2">توضیحات درخواستی تکمیلی</label>
+                        <textarea id="reqDescription" rows="3" placeholder="ترجیحاً طبقات بالا، دارای آسانسور و نورگیر عالی..." class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-3 text-sm focus:border-amber-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <!-- Client Private Data -->
+                    <div class="bg-rose-950/20 border border-rose-900/40 p-5 rounded-2xl">
+                        <div class="flex items-center gap-2 mb-3 text-rose-400 font-bold text-xs">
+                            <i class="fa-solid fa-lock"></i>
+                            اطلاعات تماس خریدار / متقاضی (کاملاً محرمانه)
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">نام متقاضی / مشتری *</label>
+                                <input type="text" id="clientName" required placeholder="مثال: آقای احمدی" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm focus:border-amber-500 focus:outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-300 mb-1">شماره تماس متقاضی *</label>
+                                <input type="tel" id="clientPhone" required placeholder="0912xxxxxxx" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm dir-ltr focus:border-amber-500 focus:outline-none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-navy-950 font-black py-4 rounded-xl text-base shadow-xl transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-user-check text-lg"></i>
+                            ثبت درخواست متقاضی
+                        </button>
+                    </div>
+                </form>
             </div>
         </section>
 
     </main>
 
-    <!-- Footer & Contact -->
-    <footer class="bg-gray-900 text-gray-300 mt-12 py-8 border-t border-gray-800">
-        <div class="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-right">
-            <div>
-                <h3 class="text-lg font-bold text-white mb-2">📞 تماس با دفتر</h3>
-                <p class="text-sm">086-33661572</p>
-                <p class="text-sm">09183678017 | 09120946501</p>
+    <!-- PROPERTY DETAILS & GALLERY MODAL (نمایش کامل فایل برای مخاطب) -->
+    <div id="detailModal" class="fixed inset-0 bg-navy-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-navy-900 border border-gold-600/40 w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[92vh] flex flex-col">
+            
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 bg-navy-950 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span id="modalCodeBadge" class="bg-gold-500 text-navy-950 font-black text-xs sm:text-sm px-3 py-1 rounded-lg dir-ltr">
+                        AG01
+                    </span>
+                    <h3 id="modalTitle" class="text-base sm:text-xl font-black text-white truncate max-w-[200px] sm:max-w-md">
+                        مشخصات کامل ملک
+                    </h3>
+                </div>
+                <button onclick="closeDetailModal()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-rose-900 text-slate-300 hover:text-white transition flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
-            <div>
-                <h3 class="text-lg font-bold text-white mb-2">📍 آدرس دفتر</h3>
-                <p class="text-sm">بلوار فاطمیه، روبروی بانک ملت، بهاران ۱۱</p>
+
+            <!-- Modal Scrollable Content -->
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-grow">
+                
+                <!-- Main Gallery & Lightbox -->
+                <div class="space-y-3">
+                    <div class="relative h-64 sm:h-96 rounded-2xl overflow-hidden bg-black border border-slate-800 group">
+                        <img id="modalMainImg" src="" class="w-full h-full object-cover transition-all duration-300">
+                        <span id="modalDealBadge" class="absolute top-4 right-4 bg-gold-500 text-navy-950 font-black text-xs px-3 py-1.5 rounded-xl shadow-lg">
+                            فروش
+                        </span>
+                        <div class="absolute bottom-3 left-3 bg-navy-950/80 backdrop-blur-sm text-slate-300 text-xs px-3 py-1 rounded-lg font-mono dir-ltr">
+                            <i class="fa-solid fa-images ml-1 text-gold-400"></i>
+                            <span id="modalPhotoCounter">1 / 1</span>
+                        </div>
+                    </div>
+                    <!-- Thumbnails row -->
+                    <div id="modalThumbnails" class="flex items-center gap-2 overflow-x-auto pb-2">
+                        <!-- Thumbs rendered here -->
+                    </div>
+                </div>
+
+                <!-- Price & Zone Summary Header -->
+                <div class="bg-navy-950/80 border border-slate-800 p-4 sm:p-5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="text-xs text-slate-400 mb-1 flex items-center gap-1">
+                            <i class="fa-solid fa-location-dot text-gold-400"></i>
+                            منطقه / محله:
+                        </div>
+                        <div id="modalLocationText" class="text-base sm:text-lg font-bold text-white">
+                            نام منطقه ثبت نشده
+                        </div>
+                    </div>
+                    <div class="text-right sm:text-left border-t sm:border-t-0 border-slate-800 pt-3 sm:pt-0">
+                        <div class="text-xs text-slate-400 mb-1">قیمت کارشناسی:</div>
+                        <div id="modalPriceText" class="text-lg sm:text-2xl font-black text-gold-400 gold-text-glow">
+                            ۰ تومان
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Specs Breakdown Grid -->
+                <div>
+                    <h4 class="text-sm font-extrabold text-gold-400 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-list-check"></i>
+                        جزئیات و مشخصات فنی ملک
+                    </h4>
+                    <div id="modalSpecsGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        <!-- Dynamically filled specs badges -->
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="bg-navy-950/50 p-4 rounded-2xl border border-slate-800">
+                    <h4 class="text-xs font-bold text-slate-400 mb-2">توضیحات و امکانات جانبی:</h4>
+                    <p id="modalDescriptionText" class="text-sm text-slate-200 leading-relaxed whitespace-pre-line">
+                        توضیحاتی ثبت نشده است.
+                    </p>
+                </div>
+
+                <!-- Public Notice Regarding Confidentiality -->
+                <div class="bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl text-xs text-amber-300/90 flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-base text-amber-400"></i>
+                    جهت هماهنگی بازدید و دریافت آدرس دقیق ملک، مستقیماً با دفتر املاک قدس تماس بگیرید.
+                </div>
             </div>
-            <div>
-                <h3 class="text-lg font-bold text-white mb-2">🌐 ارتباط در شبکه اجتماعی</h3>
-                <p class="text-sm">اینستاگرام: <a href="https://instagram.com/amlak_ghods" class="text-blue-400 hover:underline">amlak_ghods@</a></p>
-                <p class="text-sm">واتساپ: <a href="https://wa.me/989351891081" class="text-green-400 hover:underline">09351891081</a></p>
+
+            <!-- Modal Footer Actions -->
+            <div class="p-4 bg-navy-950 border-t border-slate-800 flex items-center justify-between gap-3">
+                <a href="tel:09120000000" class="flex-1 gold-button text-navy-950 font-black py-3 rounded-xl text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-phone"></i>
+                    تماس با املاک قدس (۰۹۱۲۰۰۰۰۰۰۰)
+                </a>
+                <button onclick="openMapSearch()" class="px-4 py-3 bg-navy-800 border border-slate-700 hover:border-gold-500 text-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-map-location-dot text-gold-400 text-base"></i>
+                    <span class="hidden sm:inline">مشاهده روی نقشه</span>
+                </button>
             </div>
         </div>
-        <div class="text-center text-xs text-gray-500 mt-8 border-t border-gray-800 pt-4">
-            © تمامی حقوق برای مشاورین املاک قدس (کریمی) محفوظ است.
+    </div>
+
+    <!-- SECRET ADMIN LOGIN MODAL -->
+    <div id="adminLoginModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-navy-900 border border-gold-500/40 w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative text-center">
+            <div class="w-16 h-16 rounded-2xl bg-gold-500/10 border border-gold-500/30 flex items-center justify-center text-gold-400 mx-auto mb-4">
+                <i class="fa-solid fa-user-lock text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-black text-white mb-1">ورود به پنل مدیریت املاک قدس</h3>
+            <p class="text-xs text-slate-400 mb-6">لطفاً رمز عبور اختصاصی مدیر را وارد کنید.</p>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <input type="password" id="adminPasswordInput" required placeholder="رمز عبور..." class="w-full bg-navy-950 border border-slate-700 text-white text-center text-lg font-mono rounded-xl p-3 focus:border-gold-500 focus:outline-none tracking-widest">
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="closeAdminModal()" class="w-1/3 bg-slate-800 text-slate-300 py-3 rounded-xl font-bold text-sm hover:bg-slate-700 transition">
+                        انصراف
+                    </button>
+                    <button type="submit" class="w-2/3 gold-button text-navy-950 font-black py-3 rounded-xl text-sm">
+                        ورود به پنل
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADMIN MANAGEMENT PANEL MODAL -->
+    <div id="adminPanelModal" class="fixed inset-0 bg-navy-950/90 backdrop-blur-lg z-50 hidden flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+        <div class="bg-navy-900 border border-rose-600/30 w-full max-w-6xl rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[95vh] flex flex-col">
+            
+            <div class="p-5 bg-rose-950/40 border-b border-rose-900/40 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-600/20 text-rose-400 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-shield-halved text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-black text-white">پنل اختصاصی مدیریت (محرمانه)</h3>
+                        <p class="text-xs text-slate-400">دسترسی کامل به اطلاعات مالکین، شماره‌ها و مدیریت داده‌ها</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminPanelModal()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-rose-900 text-slate-300 hover:text-white transition flex items-center justify-center">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="p-4 sm:p-6 overflow-y-auto space-y-6 flex-grow">
+                <!-- Admin Search Bar -->
+                <div class="bg-navy-950 p-4 rounded-2xl border border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input type="text" id="adminSearchQuery" oninput="renderAdminTable()" placeholder="جستجو نام مالک، شماره تلفن، منطقه..." class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl py-2.5 px-4 text-sm focus:border-rose-500 focus:outline-none">
+                    
+                    <select id="adminFilterType" onchange="renderAdminTable()" class="bg-navy-900 border border-slate-700 text-white rounded-xl py-2.5 px-3 text-sm focus:border-rose-500 focus:outline-none">
+                        <option value="all">همه موارد (فایل‌ها و درخواست‌ها)</option>
+                        <option value="listings">فقط فایل‌های املاک</option>
+                        <option value="requests">فقط درخواست‌های مشتری</option>
+                    </select>
+
+                    <div class="flex items-center gap-2">
+                        <button onclick="exportDatabaseJSON()" class="flex-1 bg-emerald-950/80 border border-emerald-600/40 hover:bg-emerald-900 text-emerald-300 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-download"></i>
+                            دانلود پشتیبان (Backup)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Admin Data Table -->
+                <div class="overflow-x-auto rounded-2xl border border-slate-800">
+                    <table class="w-full text-right text-xs text-slate-300">
+                        <thead class="bg-navy-950 text-slate-400 font-bold uppercase border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">کد</th>
+                                <th class="p-3">نوع / ملک</th>
+                                <th class="p-3">منطقه / قیمت</th>
+                                <th class="p-3 text-rose-300">نام مالک / مشتری</th>
+                                <th class="p-3 text-rose-300">شماره تماس مستقیم</th>
+                                <th class="p-3 text-center">عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody" class="divide-y divide-slate-800 bg-navy-900/60">
+                            <!-- Admin rows populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast" class="bg-navy-900 border border-gold-500 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 text-sm font-bold">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-gold-400 text-lg"></i>
+        <span id="toastMessage">پیام سیستم</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-navy-900 border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p>© تمامی حقوق برای <span class="text-gold-400 font-bold">املاک قدس</span> محفوظ است.</p>
+            <p class="text-[11px] text-slate-600">سامانه اختصاصی مدیریت املاک و ثبت درخواست متقاضیان</p>
         </div>
     </footer>
 
-    <!-- JS Logic -->
+    <!-- APPLICATION JAVASCRIPT LOGIC -->
     <script>
-        // مدیریت تب‌ها
+        /* ==========================================================================
+           1. INITIAL STATE & MOCK DATA Persistence
+           ========================================================================== */
+        
+        // Secret logo 5-click counter
+        let logoClickCount = 0;
+        let logoClickTimer = null;
+        let isAdminLoggedIn = false;
+
+        // Photo Upload Store Temporary Array
+        let currentUploadedImages = [];
+
+        // Initial Sample Data (If LocalStorage is Empty)
+        const sampleListings = [
+            {
+                id: 'AG01',
+                dealType: 'فروش',
+                category: 'آپارتمان',
+                area: '۱۲۰',
+                floor: '۳',
+                totalFloors: '۵',
+                unitsPerFloor: '۲',
+                builtYear: '۱۴۰۱',
+                documentStatus: 'دارد',
+                ownershipStatus: 'شهری',
+                exchange: 'ندارد',
+                exchangeDesc: '',
+                parking: 'دارد',
+                storage: 'دارد',
+                elevator: 'دارد',
+                heating: 'پکیج',
+                cooling: 'کولر گازی',
+                price: '۴,۵۰۰,۰۰۰,۰۰۰',
+                location: 'خیابان شریعتی، محدوده قصر',
+                fullAddressConfidential: 'خیابان شریعتی، کوچه ۱۰، پلاک ۴',
+                ownerName: 'جناب آقای رضایی',
+                ownerPhone: '09121111111',
+                photos: [
+                    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop&q=80',
+                    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&auto=format&fit=crop&q=80'
+                ],
+                description: 'آپارتمان بسیار خوش‌نقشه، غرق در نور، فول امکانات با متریال درجه یک. مشاعات تمیز.',
+                date: '1403/01/15'
+            },
+            {
+                id: 'AG02',
+                dealType: 'رهن و اجاره',
+                category: 'ویلایی',
+                villaType: 'دربست',
+                area: '۲۵۰',
+                bedrooms: '۳',
+                peopleCount: '۴',
+                parking: 'دارد',
+                storage: 'دارد',
+                heating: 'پکیج',
+                cooling: 'داکت اسپلیت',
+                priceDeposit: '۵۰۰,۰۰۰,۰۰۰',
+                priceRent: '۱۵,۰۰۰,۰۰۰',
+                convertible: 'اجاره به رهن',
+                location: 'شهرک قدس، فاز ۲',
+                fullAddressConfidential: 'شهرک قدس، خیابان گلستان، پلاک ۱۲',
+                ownerName: 'خانم دکتر طاهری',
+                ownerPhone: '09122222222',
+                photos: [
+                    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&auto=format&fit=crop&q=80'
+                ],
+                description: 'ویلای حیاط دار سرسبز، بازسازی کامل شده، مناسب سکونت خانواده.',
+                date: '1403/01/18'
+            }
+        ];
+
+        const sampleRequests = [
+            {
+                id: 'AK01',
+                dealType: 'خرید',
+                category: 'آپارتمان',
+                location: 'محدوده شریعتی یا پاسداران',
+                approxArea: '۱۰۰ تا ۱۳۰ متری',
+                bedrooms: '۲ خواب',
+                floor: 'طبقه ۳ به بالا با آسانسور',
+                budget: '۵,۰۰۰,۰۰۰,۰۰۰',
+                clientName: 'آقای مهندس محمدی',
+                clientPhone: '09123333333',
+                description: 'خریدار واقعی، ترجیحاً نوساز یا زیر ۵ سال ساخت با پارکینگ اختصاصی.',
+                date: '1403/01/20'
+            }
+        ];
+
+        // Load or Initialize Data
+        function getListings() {
+            const data = localStorage.getItem('amlak_ghods_listings');
+            return data ? JSON.parse(data) : sampleListings;
+        }
+
+        function saveListings(data) {
+            localStorage.setItem('amlak_ghods_listings', JSON.stringify(data));
+        }
+
+        function getRequests() {
+            const data = localStorage.getItem('amlak_ghods_requests');
+            return data ? JSON.parse(data) : sampleRequests;
+        }
+
+        function saveRequests(data) {
+            localStorage.setItem('amlak_ghods_requests', JSON.stringify(data));
+        }
+
+        /* ==========================================================================
+           2. NUMBER FORMATTING & AUTOMATION HELPERS
+           ========================================================================== */
+
+        // Auto 3-Digit Comma Formatting
+        function formatNumberWithCommas(value) {
+            if (!value) return '';
+            const cleanNum = value.toString().replace(/[^\d]/g, '');
+            return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+
+        // Attach event listener for inputs with 3-digit separator
+        function setupCurrencyInputs() {
+            document.querySelectorAll('.currency-input').forEach(input => {
+                input.removeEventListener('input', handleCurrencyInput);
+                input.addEventListener('input', handleCurrencyInput);
+            });
+        }
+
+        function handleCurrencyInput(e) {
+            const cursorPosition = e.target.selectionStart;
+            const originalLength = e.target.value.length;
+            e.target.value = formatNumberWithCommas(e.target.value);
+            const newLength = e.target.value.length;
+            e.target.setSelectionRange(cursorPosition + (newLength - originalLength), cursorPosition + (newLength - originalLength));
+        }
+
+        // Generate Auto Code IDs (AG01, AG02... or AK01, AK02...)
+        function generateListingCode() {
+            const listings = getListings();
+            const nextNum = listings.length + 1;
+            return `AG${nextNum < 10 ? '0' + nextNum : nextNum}`;
+        }
+
+        function generateRequestCode() {
+            const requests = getRequests();
+            const nextNum = requests.length + 1;
+            return `AK${nextNum < 10 ? '0' + nextNum : nextNum}`;
+        }
+
+        /* ==========================================================================
+           3. TAB NAVIGATION & VIEW SWITCHING
+           ========================================================================== */
+
         function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + tabName).classList.remove('hidden');
-            if(tabName === 'listings') renderListings();
+            // Update Tab Button Styles
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-gold-500', 'text-navy-950', 'shadow-lg', 'gold-border-glow');
+                btn.classList.add('bg-navy-800', 'text-slate-300');
+            });
+
+            const activeBtn = document.getElementById(`tab-${tabName}`);
+            if (activeBtn && tabName !== 'admin-badge') {
+                activeBtn.classList.remove('bg-navy-800', 'text-slate-300');
+                activeBtn.classList.add('bg-gold-500', 'text-navy-950', 'shadow-lg', 'gold-border-glow');
+            }
+
+            // Hide all section contents
+            document.querySelectorAll('.tab-content').forEach(sec => sec.classList.add('hidden'));
+
+            // Show selected section
+            const targetSec = document.getElementById(`section-${tabName}`);
+            if (targetSec) targetSec.classList.remove('hidden');
+
+            // Trigger specific renders
+            if (tabName === 'listings') renderPublicListings();
+            if (tabName === 'requests') renderPublicRequests();
+            if (tabName === 'add-listing') {
+                document.getElementById('generatedListingCodeBadge').innerText = `کد: ${generateListingCode()}`;
+                renderDynamicListingForm();
+            }
+            if (tabName === 'add-request') {
+                document.getElementById('generatedRequestCodeBadge').innerText = `کد: ${generateRequestCode()}`;
+                renderDynamicRequestForm();
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function toggleReqFields() {
-            const type = document.getElementById('req-type').value;
-            if(type === 'خرید') {
-                document.getElementById('buy-budget-container').classList.remove('hidden');
-                document.getElementById('rent-budget-container').classList.add('hidden');
+        /* ==========================================================================
+           4. DYNAMIC FORM GENERATION (ثبت فایل ملک و درخواست)
+           ========================================================================== */
+
+        const propertyCategoriesMap = {
+            'فروش': ['آپارتمان', 'ویلایی', 'باغ و زمین', 'مغازه تجاری', 'کارگاهی صنعتی'],
+            'رهن و اجاره': ['آپارتمان', 'ویلایی', 'مغازه تجاری', 'کارگاهی صنعتی'],
+            'مشارکت در ساخت': ['مشارکت در ساخت']
+        };
+
+        function renderDynamicListingForm() {
+            const dealType = document.getElementById('listingDealType').value;
+            const categorySelect = document.getElementById('listingCategory');
+            const categoryWrapper = document.getElementById('listingCategoryWrapper');
+            
+            // Populate Property Categories based on deal type
+            const availableCategories = propertyCategoriesMap[dealType] || [];
+            
+            if (dealType === 'مشارکت در ساخت') {
+                categoryWrapper.classList.add('hidden');
             } else {
-                document.getElementById('buy-budget-container').classList.add('hidden');
-                document.getElementById('rent-budget-container').classList.remove('hidden');
+                categoryWrapper.classList.remove('hidden');
+                const prevVal = categorySelect.value;
+                categorySelect.innerHTML = availableCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+                if (availableCategories.includes(prevVal)) categorySelect.value = prevVal;
+            }
+
+            const activeCategory = dealType === 'مشارکت در ساخت' ? 'مشارکت در ساخت' : categorySelect.value;
+            const fieldsContainer = document.getElementById('dynamicListingFields');
+            fieldsContainer.innerHTML = '';
+
+            // Generate category-specific form fields
+            let fieldsHTML = '';
+
+            if (dealType === 'فروش') {
+                if (activeCategory === 'آپارتمان') {
+                    fieldsHTML = `
+                        <div><label class="block text-xs text-slate-300 mb-1">متراژ (مترمربع) *</label><input type="number" id="f_area" required placeholder="۱۲۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">طبقه مورد نظر</label><input type="text" id="f_floor" placeholder="۳" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">تعداد کل طبقات</label><input type="text" id="f_totalFloors" placeholder="۵" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">تعداد واحد در طبقه</label><input type="text" id="f_unitsPerFloor" placeholder="۲" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">سال ساخت</label><input type="text" id="f_builtYear" placeholder="۱۴۰۱" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">وضعیت سند (کشویی)</label>
+                            <select id="f_documentStatus" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm">
+                                <option value="دارد">دارد</option><option value="ندارد">ندارد</option><option value="در دست اقدام">در دست اقدام</option>
+                            </select>
+                        </div>
+                        <div><label class="block text-xs text-slate-300 mb-1">وضعیت ملکیت (کشویی)</label>
+                            <select id="f_ownershipStatus" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm">
+                                <option value="شهری">شهری</option><option value="اوقافی">اوقافی</option>
+                            </select>
+                        </div>
+                        <div><label class="block text-xs text-slate-300 mb-1">معاوضه (کشویی)</label>
+                            <select id="f_exchange" onchange="toggleExchangeDesc(this)" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm">
+                                <option value="ندارد">ندارد</option><option value="دارد">دارد</option>
+                            </select>
+                        </div>
+                        <div id="exchangeDescWrapper" class="hidden"><label class="block text-xs text-slate-300 mb-1">توضیحات معاوضه</label><input type="text" id="f_exchangeDesc" placeholder="معاوضه با ماشین یا آپارتمان کوچک‌تر" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">پارکینگ</label><select id="f_parking" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="دارد">دارد</option><option value="ندارد">ندارد</option><option value="مشاع">مشاع</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">انباری</label><select id="f_storage" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="دارد">دارد</option><option value="ندارد">ندارد</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">آسانسور</label><select id="f_elevator" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="دارد">دارد</option><option value="ندارد">ندارد</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">گرمایش</label><select id="f_heating" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="پکیج">پکیج</option><option value="داکت اسپلیت">داکت اسپلیت</option><option value="بخاری">بخاری</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">سرمایش</label><select id="f_cooling" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="کولر گازی">کولر گازی</option><option value="داکت اسپلیت">داکت اسپلیت</option><option value="کولر آبی">کولر آبی</option></select></div>
+                        <div class="sm:col-span-2"><label class="block text-xs font-bold text-gold-400 mb-1">قیمت فروش (تومان) *</label><input type="text" id="f_price" required placeholder="۴,۵۰۰,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-gold-400"></div>
+                        <div class="sm:col-span-2"><label class="block text-xs text-slate-300 mb-1">منطقه / آدرس عمومی ملک *</label><input type="text" id="f_location" required placeholder="مثال: خیابان شریعتی، محدوده قصر" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    `;
+                } else if (activeCategory === 'ویلایی') {
+                    fieldsHTML = `
+                        <div><label class="block text-xs text-slate-300 mb-1">متراژ کل (مترمربع) *</label><input type="number" id="f_area" required placeholder="۲۵0" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">سمت ساختمان</label><select id="f_direction" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="شمالی">شمالی</option><option value="جنوبی">جنوبی</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">طول ابعاد زمین (متر)</label><input type="text" id="f_dimLength" placeholder="۲۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">عرض ابعاد زمین (متر)</label><input type="text" id="f_dimWidth" placeholder="۱۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">تعداد طبقات</label><input type="text" id="f_totalFloors" placeholder="۲" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">وضعیت سند</label><select id="f_documentStatus" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="دارد">دارد</option><option value="ندارد">ندارد</option><option value="در دست اقدام">در دست اقدام</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">وضعیت ملکیت</label><select id="f_ownershipStatus" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="شهری">شهری</option><option value="اوقافی">اوقافی</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">معاوضه</label><select id="f_exchange" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="ندارد">ندارد</option><option value="دارد">دارد</option></select></div>
+                        <div class="sm:col-span-2"><label class="block text-xs font-bold text-gold-400 mb-1">قیمت کل تومان *</label><input type="text" id="f_price" required placeholder="۸,۰۰۰,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-gold-400"></div>
+                        <div class="sm:col-span-2"><label class="block text-xs text-slate-300 mb-1">منطقه / آدرس ملک *</label><input type="text" id="f_location" required placeholder="شهرک قدس، خیابان اصلی" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    `;
+                } else if (activeCategory === 'باغ و زمین') {
+                    fieldsHTML = `
+                        <div><label class="block text-xs text-slate-300 mb-1">متراژ کل (مترمربع) *</label><input type="number" id="f_area" required placeholder="۵۰۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">طول ابعاد زمین</label><input type="text" id="f_dimLength" placeholder="۲۵" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">عرض ابعاد زمین</label><input type="text" id="f_dimWidth" placeholder="۲۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">بنا</label><select id="f_hasBuilding" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="دارد">دارد</option><option value="ندارد">ندارد</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">آب</label><select id="f_water" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="کنتور اختصاصی">کنتور اختصاصی</option><option value="مشاع">مشاع</option><option value="ندارد">ندارد</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">برق</label><select id="f_electricity" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="کنتور اختصاصی">کنتور اختصاصی</option><option value="مشاع">مشاع</option><option value="ندارد">ندارد</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">گاز</label><select id="f_gas" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="دارد">دارد</option><option value="ندارد">ندارد</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">حصار</label><select id="f_fence" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="چهار دیواری">چهار دیواری</option><option value="فنس">فنس</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">متراژ کوچه (عرض)</label><input type="text" id="f_alleyWidth" placeholder="۸ متری" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">وضعیت معبر</label><select id="f_alleyStatus" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="باز است">باز است</option><option value="بن بست میباشد">بن بست میباشد</option></select></div>
+                        <div class="sm:col-span-2"><label class="block text-xs font-bold text-gold-400 mb-1">قیمت تومان *</label><input type="text" id="f_price" required placeholder="۳,۰۰۰,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-gold-400"></div>
+                        <div class="sm:col-span-2"><label class="block text-xs text-slate-300 mb-1">منطقه / آدرس ملک *</label><input type="text" id="f_location" required placeholder="روستای قدس، خیابان بهار" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    `;
+                } else if (activeCategory === 'مغازه تجاری' || activeCategory === 'کارگاهی صنعتی') {
+                    fieldsHTML = `
+                        <div><label class="block text-xs text-slate-300 mb-1">متراژ (مترمرحب) *</label><input type="number" id="f_area" required placeholder="۴۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">طول × عرض ابعاد</label><input type="text" id="f_dimensions" placeholder="۸ × ۵" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">آب</label><select id="f_water" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="کنتور اختصاصی">کنتور اختصاصی</option><option value="مشاع">مشاع</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">برق</label><select id="f_electricity" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="کنتور اختصاصی">کنتور اختصاصی</option><option value="مشاع">مشاع</option></select></div>
+                        <div><label class="block text-xs text-slate-300 mb-1">گاز</label><select id="f_gas" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="کنتور اختصاصی">کنتور اختصاصی</option><option value="مشاع">مشاع</option></select></div>
+                        <div class="sm:col-span-2"><label class="block text-xs font-bold text-gold-400 mb-1">قیمت کل تومان *</label><input type="text" id="f_price" required placeholder="۵,۰۰۰,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-gold-400"></div>
+                        <div class="sm:col-span-2"><label class="block text-xs text-slate-300 mb-1">منطقه / آدرس *</label><input type="text" id="f_location" required placeholder="راسته بازار تجاری" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    `;
+                }
+            } else if (dealType === 'رهن و اجاره') {
+                fieldsHTML = `
+                    <div><label class="block text-xs text-slate-300 mb-1">متراژ *</label><input type="number" id="f_area" required placeholder="۹۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    <div><label class="block text-xs text-slate-300 mb-1">تعداد خواب</label><input type="text" id="f_bedrooms" placeholder="۲" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    <div><label class="block text-xs font-bold text-gold-400 mb-1">مبلغ رهن (تومان) *</label><input type="text" id="f_priceDeposit" required placeholder="۲۰۰,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-gold-400"></div>
+                    <div><label class="block text-xs font-bold text-gold-400 mb-1">مبلغ اجاره (تومان) *</label><input type="text" id="f_priceRent" required placeholder="۶,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-gold-400"></div>
+                    <div><label class="block text-xs text-slate-300 mb-1">قابلیت تبدیل</label>
+                        <select id="f_convertible" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm">
+                            <option value="رهن به اجاره">رهن به اجاره</option><option value="اجاره به رهن">اجاره به رهن</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2"><label class="block text-xs text-slate-300 mb-1">منطقه / آدرس *</label><input type="text" id="f_location" required placeholder="خیابان قدس، کوچه ۵" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                `;
+            } else if (dealType === 'مشارکت در ساخت') {
+                fieldsHTML = `
+                    <div><label class="block text-xs text-slate-300 mb-1">متراژ زمین (مترمربع) *</label><input type="number" id="f_area" required placeholder="۳۰۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    <div><label class="block text-xs text-slate-300 mb-1">ابعاد زمین (طول × عرض)</label><input type="text" id="f_dimensions" placeholder="۳۰ × ۱۰" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    <div><label class="block text-xs text-slate-300 mb-1">سمت ساختمان</label><select id="f_direction" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"><option value="شمالی">شمالی</option><option value="جنوبی">جنوبی</option></select></div>
+                    <div class="sm:col-span-2"><label class="block text-xs text-slate-300 mb-1">منطقه / آدرس زمین *</label><input type="text" id="f_location" required placeholder="محدوده بافت نوساز قدس" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                `;
+            }
+
+            fieldsContainer.innerHTML = fieldsHTML;
+            setupCurrencyInputs();
+        }
+
+        function toggleExchangeDesc(selectElem) {
+            const descDiv = document.getElementById('exchangeDescWrapper');
+            if (descDiv) {
+                if (selectElem.value === 'دارد') descDiv.classList.remove('hidden');
+                else descDiv.classList.add('hidden');
             }
         }
 
-        // ذخیره درخواست
-        function handleRequestSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('req-name').value;
-            const phone = document.getElementById('req-phone').value;
-            const type = document.getElementById('req-type').value;
-            const region = document.getElementById('req-region').value;
+        function renderDynamicRequestForm() {
+            const dealType = document.getElementById('reqDealType').value;
+            const categorySelect = document.getElementById('reqCategory');
+            const categoryWrapper = document.getElementById('reqCategoryWrapper');
 
-            const text = `سلام، درخواست ${type} ملک توسط ${name} (${phone}) - منطقه: ${region}`;
-            const encoded = encodeURIComponent(text);
-
-            document.getElementById('link-whatsapp').href = `https://wa.me/989351891081?text=${encoded}`;
-            document.getElementById('link-telegram').href = `https://t.me/share/url?url=&text=${encoded}`;
-            document.getElementById('link-eitaa').href = `https://eitaa.com/share/url?text=${encoded}`;
-
-            document.getElementById('share-options').classList.remove('hidden');
-        }
-
-        // ذخیره ملک در LocalStorage
-        function handlePropertySubmit(e) {
-            e.preventDefault();
-            const property = {
-                id: Date.now(),
-                type: document.getElementById('prop-type').value,
-                category: document.getElementById('prop-category').value,
-                size: document.getElementById('prop-size').value,
-                rooms: document.getElementById('prop-rooms').value,
-                price: document.getElementById('prop-price').value,
-                address: document.getElementById('prop-address').value,
-                owner: document.getElementById('prop-owner').value,
-                phone: document.getElementById('prop-owner-phone').value,
-                features: document.getElementById('prop-features').value,
-                date: new Date().toLocaleDateString('fa-IR')
-            };
-
-            let properties = JSON.parse(localStorage.getItem('properties') || '[]');
-            properties.unshift(property);
-            localStorage.setItem('properties', JSON.stringify(properties));
-
-            alert('فایل ملک با موفقیت ثبت شد!');
-            document.getElementById('form-property').reset();
-            switchTab('listings');
-        }
-
-        // نمایش لیست فایل‌ها
-        function renderListings(filter = 'همه') {
-            const container = document.getElementById('listings-container');
-            let properties = JSON.parse(localStorage.getItem('properties') || '[]');
-
-            if(filter !== 'همه') {
-                properties = properties.filter(p => p.type === filter);
+            const availableCategories = propertyCategoriesMap[dealType] || [];
+            if (dealType === 'مشارکت در ساخت') {
+                categoryWrapper.classList.add('hidden');
+            } else {
+                categoryWrapper.classList.remove('hidden');
+                categorySelect.innerHTML = availableCategories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
             }
 
-            if(properties.length === 0) {
-                container.innerHTML = '<p class="text-gray-500 text-center col-span-2 py-8">هیچ فایلی ثبت نشده است.</p>';
+            const fieldsContainer = document.getElementById('dynamicRequestFields');
+            
+            let fieldsHTML = `
+                <div><label class="block text-xs text-slate-300 mb-1">منطقه مورد نظر *</label><input type="text" id="rf_location" required placeholder="مثال: مرکز شهر یا قدس" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                <div><label class="block text-xs text-slate-300 mb-1">متراژ تقریبی / مورد نظر</label><input type="text" id="rf_approxArea" placeholder="حدود ۱۰۰ متری" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+            `;
+
+            if (dealType === 'خرید') {
+                fieldsHTML += `
+                    <div><label class="block text-xs text-slate-300 mb-1">تعداد خواب</label><input type="text" id="rf_bedrooms" placeholder="۲ خواب" class="w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm"></div>
+                    <div><label class="block text-xs font-bold text-amber-400 mb-1">بودجه مورد نظر (تومان) *</label><input type="text" id="rf_budget" required placeholder="۴,۰۰۰,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-amber-400"></div>
+                `;
+            } else if (dealType === 'رهن و اجاره') {
+                fieldsHTML += `
+                    <div><label class="block text-xs font-bold text-amber-400 mb-1">رهن مد نظر (تومان)</label><input type="text" id="rf_budgetDeposit" placeholder="۱۵۰,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-amber-400"></div>
+                    <div><label class="block text-xs font-bold text-amber-400 mb-1">اجاره مد نظر (تومان)</label><input type="text" id="rf_budgetRent" placeholder="۵,۰۰۰,۰۰۰" class="currency-input w-full bg-navy-900 border border-slate-700 text-white rounded-xl p-2.5 text-sm font-bold text-amber-400"></div>
+                `;
+            }
+
+            fieldsContainer.innerHTML = fieldsHTML;
+            setupCurrencyInputs();
+        }
+
+        /* ==========================================================================
+           5. PHOTO UPLOAD & PREVIEW HANDLING (MAX 5 PHOTOS)
+           ========================================================================== */
+
+        function handleImageSelection(event) {
+            const files = Array.from(event.target.files);
+            if (files.length > 5) {
+                showToast('حداکثر ۵ عکس می‌توانید انتخاب کنید.', 'error');
                 return;
             }
 
-            container.innerHTML = properties.map(p => `
-                <div class="border rounded-xl p-4 bg-gray-50 hover:shadow-md transition relative">
-                    <span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-md ${p.type === 'فروش' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'} mb-2">${p.type} - ${p.category}</span>
-                    <h3 class="font-bold text-gray-800 text-base mb-1">${p.address}</h3>
-                    <p class="text-sm text-gray-600 mb-1">📐 متراژ: ${p.size || '---'} متر | 🛏️ خواب: ${p.rooms || '---'}</p>
-                    <p class="text-sm font-semibold text-blue-900 mb-2">💰 قیمت/رهن: ${p.price || 'توافقی'} تومان</p>
-                    <p class="text-xs text-gray-500 mb-2">📝 توضیحات: ${p.features || 'بدون توضیحات'}</p>
-                    <div class="text-xs text-gray-400 border-t pt-2 flex justify-between items-center">
-                        <span>👤 مالک: ${p.owner} (${p.phone})</span>
-                        <span>📅 ${p.date}</span>
+            currentUploadedImages = [];
+            const previewContainer = document.getElementById('photoPreviewContainer');
+            previewContainer.innerHTML = '';
+
+            files.forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgUrl = e.target.result;
+                    currentUploadedImages.push(imgUrl);
+
+                    const imgBox = document.createElement('div');
+                    imgBox.className = 'relative w-20 h-20 rounded-xl overflow-hidden border border-gold-500/50 shadow-md group';
+                    imgBox.innerHTML = `
+                        <img src="${imgUrl}" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                            <span class="text-[10px] text-gold-400 font-bold">عکس ${idx + 1}</span>
+                        </div>
+                    `;
+                    previewContainer.appendChild(imgBox);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        /* ==========================================================================
+           6. FORM SUBMISSION HANDLERS
+           ========================================================================== */
+
+        function handleSaveListing(e) {
+            e.preventDefault();
+
+            const dealType = document.getElementById('listingDealType').value;
+            const categorySelect = document.getElementById('listingCategory');
+            const category = dealType === 'مشارکت در ساخت' ? 'مشارکت در ساخت' : categorySelect.value;
+            
+            const newCode = generateListingCode();
+
+            // Default fallback image if none selected
+            const defaultPhotos = [
+                'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop&q=80'
+            ];
+
+            const newListing = {
+                id: newCode,
+                dealType: dealType,
+                category: category,
+                area: document.getElementById('f_area') ? document.getElementById('f_area').value : '---',
+                price: document.getElementById('f_price') ? document.getElementById('f_price').value : null,
+                priceDeposit: document.getElementById('f_priceDeposit') ? document.getElementById('f_priceDeposit').value : null,
+                priceRent: document.getElementById('f_priceRent') ? document.getElementById('f_priceRent').value : null,
+                location: document.getElementById('f_location').value,
+                ownerName: document.getElementById('ownerName').value,
+                ownerPhone: document.getElementById('ownerPhone').value,
+                description: document.getElementById('listingDescription').value || 'بدون توضیحات اضافی',
+                photos: currentUploadedImages.length > 0 ? currentUploadedImages : defaultPhotos,
+                date: new Date().toLocaleDateString('fa-IR'),
+                
+                // Extra dynamic spec fields saved
+                floor: document.getElementById('f_floor') ? document.getElementById('f_floor').value : null,
+                totalFloors: document.getElementById('f_totalFloors') ? document.getElementById('f_totalFloors').value : null,
+                bedrooms: document.getElementById('f_bedrooms') ? document.getElementById('f_bedrooms').value : null,
+                documentStatus: document.getElementById('f_documentStatus') ? document.getElementById('f_documentStatus').value : null,
+                parking: document.getElementById('f_parking') ? document.getElementById('f_parking').value : null,
+                elevator: document.getElementById('f_elevator') ? document.getElementById('f_elevator').value : null
+            };
+
+            const listings = getListings();
+            listings.unshift(newListing);
+            saveListings(listings);
+
+            showToast(`فایل ملک با کد ${newCode} با موفقیت ثبت گردید.`, 'success');
+            document.getElementById('listingForm').reset();
+            currentUploadedImages = [];
+            document.getElementById('photoPreviewContainer').innerHTML = '';
+            
+            switchTab('listings');
+        }
+
+        function handleSaveRequest(e) {
+            e.preventDefault();
+
+            const dealType = document.getElementById('reqDealType').value;
+            const categorySelect = document.getElementById('reqCategory');
+            const category = dealType === 'مشارکت در ساخت' ? 'مشارکت در ساخت' : categorySelect.value;
+            
+            const newCode = generateRequestCode();
+
+            const newRequest = {
+                id: newCode,
+                dealType: dealType,
+                category: category,
+                location: document.getElementById('rf_location').value,
+                approxArea: document.getElementById('rf_approxArea') ? document.getElementById('rf_approxArea').value : '---',
+                budget: document.getElementById('rf_budget') ? document.getElementById('rf_budget').value : null,
+                budgetDeposit: document.getElementById('rf_budgetDeposit') ? document.getElementById('rf_budgetDeposit').value : null,
+                budgetRent: document.getElementById('rf_budgetRent') ? document.getElementById('rf_budgetRent').value : null,
+                clientName: document.getElementById('clientName').value,
+                clientPhone: document.getElementById('clientPhone').value,
+                description: document.getElementById('reqDescription').value || 'بدون توضیح',
+                date: new Date().toLocaleDateString('fa-IR')
+            };
+
+            const requests = getRequests();
+            requests.unshift(newRequest);
+            saveRequests(requests);
+
+            showToast(`درخواست متقاضی با کد ${newCode} ثبت شد.`, 'success');
+            document.getElementById('requestForm').reset();
+            switchTab('requests');
+        }
+
+        /* ==========================================================================
+           7. PUBLIC GALLERY CARD RENDERERS (PRIVACY GUARANTEED)
+           ========================================================================== */
+
+        function renderPublicListings() {
+            const listings = getListings();
+            const grid = document.getElementById('listingsGrid');
+            const emptyMsg = document.getElementById('emptyListings');
+
+            const query = document.getElementById('publicSearchInput').value.toLowerCase();
+            const filterCat = document.getElementById('publicFilterCategory').value;
+
+            const filtered = listings.filter(item => {
+                const matchesSearch = item.location.toLowerCase().includes(query) || item.id.toLowerCase().includes(query) || item.category.includes(query);
+                const matchesCat = filterCat === 'all' || item.dealType === filterCat;
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyMsg.classList.remove('hidden');
+                return;
+            }
+
+            emptyMsg.classList.add('hidden');
+            grid.innerHTML = filtered.map(item => `
+                <div class="bg-navy-900 border border-slate-800 rounded-3xl overflow-hidden hover:border-gold-500/50 transition duration-300 shadow-xl group flex flex-col justify-between">
+                    <div>
+                        <!-- Image Banner -->
+                        <div class="relative h-52 overflow-hidden bg-slate-950 cursor-pointer" onclick="openDetailModal('${item.id}')">
+                            <img src="${item.photos[0]}" class="w-full h-full object-cover card-zoom-img">
+                            <div class="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-transparent opacity-80"></div>
+                            
+                            <!-- Badges -->
+                            <span class="absolute top-3 right-3 bg-gold-500 text-navy-950 font-black text-xs px-3 py-1 rounded-xl shadow-md">
+                                ${item.dealType} - ${item.category}
+                            </span>
+                            <span class="absolute top-3 left-3 bg-navy-950/80 text-gold-400 font-extrabold text-xs px-3 py-1 rounded-xl border border-gold-500/30 dir-ltr tracking-wider">
+                                ${item.id}
+                            </span>
+
+                            <div class="absolute bottom-3 right-3 left-3 text-white">
+                                <div class="text-xs text-gold-400/90 font-medium flex items-center gap-1">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                    ${item.location}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card Body -->
+                        <div class="p-5 space-y-3">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <span class="text-xs text-slate-400">متراژ:</span>
+                                <span class="text-sm font-bold text-white">${item.area} متر مربع</span>
+                            </div>
+
+                            <!-- Price Display -->
+                            <div class="bg-navy-950 p-3 rounded-xl border border-slate-800/80">
+                                ${item.price ? `
+                                    <div class="text-[11px] text-slate-400">قیمت فروش:</div>
+                                    <div class="text-base font-black text-gold-400 gold-text-glow">${item.price} تومان</div>
+                                ` : ''}
+
+                                ${item.priceDeposit ? `
+                                    <div class="flex justify-between items-center text-xs">
+                                        <span class="text-slate-400">رهن: <strong class="text-gold-400">${item.priceDeposit}</strong></span>
+                                        <span class="text-slate-400">اجاره: <strong class="text-gold-400">${item.priceRent}</strong></span>
+                                    </div>
+                                ` : ''}
+
+                                ${!item.price && !item.priceDeposit ? `
+                                    <div class="text-xs font-bold text-amber-400 text-center">مشارکت در ساخت - شرایط توافقی</div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card Footer Actions -->
+                    <div class="p-4 bg-navy-950/60 border-t border-slate-800 flex items-center gap-2">
+                        <button onclick="openDetailModal('${item.id}')" class="flex-1 bg-navy-800 hover:bg-navy-700 text-slate-200 text-xs font-bold py-2.5 rounded-xl border border-slate-700 transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-eye text-gold-400"></i>
+                            مشاهده کامل
+                        </button>
+                        <a href="tel:09120000000" class="px-3 py-2.5 bg-gold-500/10 hover:bg-gold-500/20 border border-gold-500/30 text-gold-400 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1" title="تماس با دفتر">
+                            <i class="fa-solid fa-phone"></i>
+                        </a>
                     </div>
                 </div>
             `).join('');
         }
 
-        function filterListings(category) {
-            renderListings(category);
+        function renderPublicRequests() {
+            const requests = getRequests();
+            const grid = document.getElementById('requestsGrid');
+            const emptyMsg = document.getElementById('emptyRequests');
+            const query = document.getElementById('requestSearchInput').value.toLowerCase();
+
+            const filtered = requests.filter(r => r.location.toLowerCase().includes(query) || r.category.toLowerCase().includes(query) || r.id.toLowerCase().includes(query));
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                emptyMsg.classList.remove('hidden');
+                return;
+            }
+
+            emptyMsg.classList.add('hidden');
+            grid.innerHTML = filtered.map(req => `
+                <div class="bg-navy-900 border border-slate-800 rounded-3xl p-5 hover:border-amber-500/40 transition shadow-xl space-y-4 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                            <span class="bg-amber-500/10 border border-amber-500/30 text-amber-400 font-extrabold text-xs px-3 py-1 rounded-xl">
+                                ${req.dealType} - ${req.category}
+                            </span>
+                            <span class="text-xs text-slate-400 font-mono dir-ltr">${req.id}</span>
+                        </div>
+
+                        <div class="space-y-2 mt-3">
+                            <div class="text-sm font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-map-pin text-amber-400 text-xs"></i>
+                                منطقه درخواستی: ${req.location}
+                            </div>
+                            <p class="text-xs text-slate-300">متراژ تقریبی: <strong>${req.approxArea}</strong></p>
+                            
+                            <div class="bg-navy-950 p-3 rounded-xl border border-slate-800 text-xs">
+                                ${req.budget ? `<span class="text-slate-400">بودجه خرید: <strong class="text-amber-400 font-black">${req.budget} تومان</strong></span>` : ''}
+                                ${req.budgetDeposit ? `<span class="text-slate-400">رهن مدنظر: <strong class="text-amber-400">${req.budgetDeposit}</strong></span>` : ''}
+                            </div>
+                            
+                            <p class="text-xs text-slate-400 line-clamp-2">${req.description}</p>
+                        </div>
+                    </div>
+
+                    <a href="tel:09120000000" class="w-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-400 py-2.5 rounded-xl text-xs font-bold transition text-center flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-phone"></i>
+                        پیشنهاد ملک به این متقاضی
+                    </a>
+                </div>
+            `).join('');
         }
+
+        function filterPublicListings() { renderPublicListings(); }
+        function filterPublicRequests() { renderPublicRequests(); }
+
+        /* ==========================================================================
+           8. DETAIL MODAL & LIGHTBOX GALLERY CONTROLLER
+           ========================================================================== */
+
+        function openDetailModal(id) {
+            const listings = getListings();
+            const item = listings.find(l => l.id === id);
+            if (!item) return;
+
+            document.getElementById('modalCodeBadge').innerText = item.id;
+            document.getElementById('modalTitle').innerText = `${item.dealType} ${item.category}`;
+            document.getElementById('modalDealBadge').innerText = item.dealType;
+            document.getElementById('modalLocationText').innerText = item.location;
+            
+            // Price Display
+            let priceFormatted = 'توافقی';
+            if (item.price) priceFormatted = `${item.price} تومان`;
+            if (item.priceDeposit) priceFormatted = `رهن: ${item.priceDeposit} / اجاره: ${item.priceRent}`;
+            document.getElementById('modalPriceText').innerText = priceFormatted;
+
+            document.getElementById('modalDescriptionText').innerText = item.description;
+
+            // Gallery Lightbox setup
+            const photos = item.photos && item.photos.length > 0 ? item.photos : ['https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&auto=format&fit=crop&q=80'];
+            
+            let currentImgIdx = 0;
+            const mainImg = document.getElementById('modalMainImg');
+            const counter = document.getElementById('modalPhotoCounter');
+            const thumbsContainer = document.getElementById('modalThumbnails');
+
+            function updateGallery(index) {
+                currentImgIdx = index;
+                mainImg.src = photos[currentImgIdx];
+                counter.innerText = `${currentImgIdx + 1} / ${photos.length}`;
+
+                thumbsContainer.querySelectorAll('img').forEach((t, i) => {
+                    if (i === currentImgIdx) t.className = "w-16 h-12 object-cover rounded-lg border-2 border-gold-400 cursor-pointer scale-105 transition";
+                    else t.className = "w-16 h-12 object-cover rounded-lg border border-slate-700 opacity-60 hover:opacity-100 cursor-pointer transition";
+                });
+            }
+
+            thumbsContainer.innerHTML = photos.map((p, i) => `
+                <img src="${p}" onclick="window.setModalGalleryIdx(${i})" class="w-16 h-12 object-cover rounded-lg border border-slate-700">
+            `).join('');
+
+            window.setModalGalleryIdx = updateGallery;
+            updateGallery(0);
+
+            // Technical Specs Grid Badges
+            const specsGrid = document.getElementById('modalSpecsGrid');
+            const specs = [
+                { label: 'متراژ', val: item.area ? `${item.area} متر` : null },
+                { label: 'طبقه', val: item.floor },
+                { label: 'تعداد کل طبقات', val: item.totalFloors },
+                { label: 'تعداد خواب', val: item.bedrooms },
+                { label: 'وضعیت سند', val: item.documentStatus },
+                { label: 'پارکینگ', val: item.parking },
+                { label: 'آسانسور', val: item.elevator },
+                { label: 'انباری', val: item.storage },
+                { label: 'گرمایش', val: item.heating },
+                { label: 'سرمایش', val: item.cooling }
+            ].filter(s => s.val);
+
+            specsGrid.innerHTML = specs.map(s => `
+                <div class="bg-navy-950 p-2.5 rounded-xl border border-slate-800 text-center">
+                    <div class="text-[10px] text-slate-400 mb-0.5">${s.label}</div>
+                    <div class="text-xs font-bold text-white">${s.val}</div>
+                </div>
+            `).join('');
+
+            document.getElementById('detailModal').classList.remove('hidden');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+
+        function openMapSearch() {
+            const loc = document.getElementById('modalLocationText').innerText;
+            const searchUrl = `https://www.google.com/maps/search/${encodeURIComponent(loc)}`;
+            window.open(searchUrl, '_blank');
+        }
+
+        /* ==========================================================================
+           9. SECRET HIDDEN ADMIN PANEL (5-CLICKS ON LOGO)
+           ========================================================================== */
+
+        document.getElementById('secretLogoTrigger').addEventListener('click', () => {
+            logoClickCount++;
+            clearTimeout(logoClickTimer);
+            
+            if (logoClickCount >= 5) {
+                logoClickCount = 0;
+                openAdminModal();
+            } else {
+                logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 2000);
+            }
+        });
+
+        function openAdminModal() {
+            if (isAdminLoggedIn) {
+                openAdminPanelModal();
+            } else {
+                document.getElementById('adminLoginModal').classList.remove('hidden');
+                document.getElementById('adminPasswordInput').focus();
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminLoginModal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPasswordInput').value;
+            if (pass === 'karimi1731') {
+                isAdminLoggedIn = true;
+                closeAdminModal();
+                showToast('ورود موفقیت‌آمیز به پنل مدیریت.', 'success');
+                
+                // Update Badge text
+                document.getElementById('adminBadgeText').innerText = 'پنل فعال مدیر';
+                document.getElementById('tab-admin-badge').classList.remove('hidden');
+                
+                openAdminPanelModal();
+            } else {
+                showToast('رمز عبور اشتباه است!', 'error');
+            }
+        }
+
+        function openAdminPanelModal() {
+            renderAdminTable();
+            document.getElementById('adminPanelModal').classList.remove('hidden');
+        }
+
+        function closeAdminPanelModal() {
+            document.getElementById('adminPanelModal').classList.add('hidden');
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminTableBody');
+            const q = document.getElementById('adminSearchQuery').value.toLowerCase();
+            const filterType = document.getElementById('adminFilterType').value;
+
+            let listings = getListings();
+            let requests = getRequests();
+
+            let rowsHTML = '';
+
+            if (filterType === 'all' || filterType === 'listings') {
+                listings.filter(l => l.ownerName.toLowerCase().includes(q) || l.ownerPhone.includes(q) || l.location.toLowerCase().includes(q) || l.id.toLowerCase().includes(q)).forEach(l => {
+                    rowsHTML += `
+                        <tr class="hover:bg-slate-800/50">
+                            <td class="p-3 font-mono font-bold text-gold-400 dir-ltr">${l.id}</td>
+                            <td class="p-3 font-bold">${l.dealType} - ${l.category}</td>
+                            <td class="p-3">${l.location}<br><span class="text-[10px] text-slate-400">${l.price || l.priceDeposit || 'توافقی'}</span></td>
+                            <td class="p-3 text-rose-300 font-bold">${l.ownerName}</td>
+                            <td class="p-3 text-rose-300 font-mono dir-ltr">${l.ownerPhone}</td>
+                            <td class="p-3 text-center">
+                                <button onclick="deleteListingItem('${l.id}')" class="p-2 bg-rose-950 text-rose-400 hover:bg-rose-800 hover:text-white rounded-lg transition" title="حذف فایل">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            if (filterType === 'all' || filterType === 'requests') {
+                requests.filter(r => r.clientName.toLowerCase().includes(q) || r.clientPhone.includes(q) || r.location.toLowerCase().includes(q) || r.id.toLowerCase().includes(q)).forEach(r => {
+                    rowsHTML += `
+                        <tr class="hover:bg-slate-800/50 bg-amber-950/10">
+                            <td class="p-3 font-mono font-bold text-amber-400 dir-ltr">${r.id}</td>
+                            <td class="p-3 font-bold">درخواست: ${r.dealType}</td>
+                            <td class="p-3">${r.location}<br><span class="text-[10px] text-slate-400">${r.budget || '---'}</span></td>
+                            <td class="p-3 text-rose-300 font-bold">${r.clientName}</td>
+                            <td class="p-3 text-rose-300 font-mono dir-ltr">${r.clientPhone}</td>
+                            <td class="p-3 text-center">
+                                <button onclick="deleteRequestItem('${r.id}')" class="p-2 bg-rose-950 text-rose-400 hover:bg-rose-800 hover:text-white rounded-lg transition" title="حذف درخواست">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            tbody.innerHTML = rowsHTML || `<tr><td colspan="6" class="p-6 text-center text-slate-500">هیچ داده‌ای یافت نشد.</td></tr>`;
+        }
+
+        function deleteListingItem(id) {
+            if (confirm(`آیا از حذف فایل ملک با کد ${id} اطمینان دارید؟`)) {
+                let listings = getListings().filter(l => l.id !== id);
+                saveListings(listings);
+                renderAdminTable();
+                renderPublicListings();
+                showToast(`فایل ${id} حذف شد.`, 'success');
+            }
+        }
+
+        function deleteRequestItem(id) {
+            if (confirm(`آیا از حذف درخواست با کد ${id} اطمینان دارید؟`)) {
+                let requests = getRequests().filter(r => r.id !== id);
+                saveRequests(requests);
+                renderAdminTable();
+                renderPublicRequests();
+                showToast(`درخواست ${id} حذف شد.`, 'success');
+            }
+        }
+
+        function exportDatabaseJSON() {
+            const data = {
+                listings: getListings(),
+                requests: getRequests(),
+                exportDate: new Date().toISOString()
+            };
+            const jsonStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", jsonStr);
+            dlAnchor.setAttribute("download", `Amlak_Ghods_Backup_${new Date().toLocaleDateString('fa-IR')}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        /* ==========================================================================
+           10. TOAST SYSTEM NOTIFICATIONS
+           ========================================================================== */
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const msgSpan = document.getElementById('toastMessage');
+            const icon = document.getElementById('toastIcon');
+
+            msgSpan.innerText = msg;
+            if (type === 'error') {
+                icon.className = 'fa-solid fa-circle-xmark text-rose-400 text-lg';
+            } else {
+                icon.className = 'fa-solid fa-circle-check text-gold-400 text-lg';
+            }
+
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        /* ==========================================================================
+           11. WINDOW ONLOAD INITIALIZATION
+           ========================================================================== */
+
+        window.onload = function() {
+            renderPublicListings();
+            setupCurrencyInputs();
+        };
     </script>
 </body>
 </html>
+```
