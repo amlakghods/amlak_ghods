@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مشاور املاک قدس (کریمی)</title>
+  <title>مشاور املاک قدس (کریمی) - اراک</title>
+  
+  <!-- فونت فارسی وزیر متن - برای فونت شیک و خوانا -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
   
   <style>
-    /* ۱. استایل کلی و رنگ زمینه کرم */
+    /* ۱. استایل کلی و رنگ زمینه کرم شیک */
     body {
-      background-color: #f9f6f0;
+      background-color: #f9f6f0; /* رنگ کرم روشن مطابق تصویر */
       color: #2c2c2c;
       font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
       margin: 0;
@@ -21,7 +23,7 @@
     .main-header {
       background-color: #ffffff;
       border-bottom: 2px solid #e0d8c8;
-      padding: 1.5rem 2rem;
+      padding: 1rem 2rem;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
     }
 
@@ -33,42 +35,43 @@
       gap: 1.5rem;
     }
 
-    /* ۳. لوگوی دایره‌ای مشکی با خطوط نارنجی */
-    .logo-wrapper {
-      width: 65px;
-      height: 65px;
-      background-color: #121212;
+    /* ۳. جایگاه لوگو (تصویر لوگوی خاص از روی عکس) */
+    .logo-container {
+      width: 80px;  /* اندازه بزرگتر برای دیده شدن جزئیات */
+      height: 80px;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #ff6b00;
+      overflow: hidden; /* برش دایره‌ای */
+      background-color: #121212; /* پس‌زمینه مشکی */
+      border: 3px solid #ff6b00; /* حاشیه نارنجی مطابق عکس */
       box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
       flex-shrink: 0;
     }
 
-    .logo-wrapper svg {
-      width: 38px;
-      height: 38px;
-      fill: none;
-      stroke: #ff6b00;
-      stroke-width: 2.2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    /* !!! مهم: شما باید عکس لوگوی خودتان را جایگزین کنید !!! */
+    .logo-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain; /* حفظ تناسب عکس */
+      /* نکته: اگر لوگو پس‌زمینه مشکی دارد، مستقیماً از روی عکس برش دهید و اینجا قرار دهید */
     }
 
-    /* ۴. متون هدر */
+    /* ۴. متون هدر با فونت و رنگ سرمه‌ای */
+    .header-titles {
+      color: #0c173c; /* رنگ سرمه‌ای مطابق عکس */
+    }
+
     .header-titles h1 {
       margin: 0;
-      font-size: 1.5rem;
+      font-size: 1.8rem; /* فونت بزرگ و شیک */
       font-weight: 800;
-      color: #1a1a1a;
+      letter-spacing: -0.5px;
     }
 
     .header-titles p {
       margin: 0.3rem 0 0 0;
-      font-size: 0.95rem;
-      color: #666666;
+      font-size: 1.1rem;
+      color: #0c173c;
+      font-weight: 500;
     }
 
     /* محتوای اصلی صفحه */
@@ -85,20 +88,14 @@
   <header class="main-header">
     <div class="header-container">
       
-      <!-- لوگوی اختصاصی مشکی و نارنجی -->
-      <div class="logo-wrapper">
-        <svg viewBox="0 0 24 24">
-          <path d="M3 21h18" />
-          <path d="M5 21V7l7-4 7 4v14" />
-          <path d="M9 10h1" />
-          <path d="M14 10h1" />
-          <path d="M9 14h1" />
-          <path d="M14 14h1" />
-          <path d="M11 21v-4h2v4" />
-        </svg>
+      <!-- ۱. جایگاه لوگو: تصویر لوگوی خاص مشکی با حرف K و خطوط نارنجی -->
+      <div class="logo-container">
+        <!-- شما باید فایل لوگوی خودتان را با فرمت .png یا .jpg در اینجا قرار دهید -->
+        <!-- مثلاً فایل را برش دهید و نام آن را logo.png بگذارید -->
+        <img src="logo.png" alt="لوگوی املاک قدس">
       </div>
 
-      <!-- عناوین هدر -->
+      <!-- ۲. عناوین هدر با فونت شیک -->
       <div class="header-titles">
         <h1>مشاور املاک قدس (کریمی)</h1>
         <p>سامانه جامع و آنلاین املاک شهر اراک</p>
