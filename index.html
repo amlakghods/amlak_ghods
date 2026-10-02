@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>مشاور املاک قدس (کریمی)</title>
 
-  <!-- بارگذاری فونت‌های دقیق نستعلیق و وزیرمتن -->
+  <!-- بارگذاری فونت‌های نستعلیق و وزیرمتن -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Vazirmatn:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@600;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/iran-nastaliq@v2.0.0/iran-nastaliq.css" rel="stylesheet">
 
   <style>
-    /* پس‌زمینه کرم دقیق دیوار در تصویر */
+    /* پس‌زمینه کرم روشن مطابق تصویر */
     body {
       background-color: #f3ece0;
       margin: 0;
@@ -21,7 +21,7 @@
       font-family: 'Vazirmatn', sans-serif;
     }
 
-    /* استایل کل بخش سربرگ (هدر) */
+    /* بخش سربرگ (هدر) */
     .site-header {
       background-color: #f3ece0;
       padding: 2.5rem 1rem;
@@ -32,7 +32,7 @@
     }
 
     .header-container {
-      max-width: 1100px;
+      max-width: 1000px;
       width: 100%;
       display: flex;
       align-items: center;
@@ -40,44 +40,40 @@
       gap: 2rem;
     }
 
-    /* جایگاه دایره لوگو */
-    .logo-holder {
-      width: 140px;
-      height: 140px;
-      background-color: #121212;
-      border-radius: 50%;
-      border: 3px solid #ff7a00;
-      box-shadow: 0 0 25px rgba(255, 122, 0, 0.4);
+    /* نماد گرافیکی و ساده ساختمان */
+    .building-icon-box {
+      width: 90px;
+      height: 90px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
     }
 
-    .logo-holder svg {
-      width: 95px;
-      height: 95px;
+    .building-icon-box svg {
+      width: 80px;
+      height: 80px;
     }
 
-    /* بخش متن‌های تابلوی سربرگ */
+    /* متن‌های هدر */
     .text-holder {
       display: flex;
       flex-direction: column;
       text-align: right;
     }
 
-    /* ۱. عنوان اصلی با خط نستعلیق و رنگ سرمه‌ای پررنگ تابلوی تصویر */
+    /* عنوان اصلی با فونت نستعلیق و رنگ سرمه‌ای تابلوی عکس */
     .main-title {
       margin: 0;
-      font-family: 'IranNastaliq', 'Aref Ruqaa', serif;
+      font-family: 'IranNastaliq', serif;
       font-size: 3.8rem;
-      color: #0d233a; /* رنگ سرمه‌ای تابلوی عکس */
+      color: #0d233a; /* رنگ سرمه‌ای پررنگ */
       line-height: 1.3;
       font-weight: bold;
       text-shadow: 1px 1px 2px rgba(13, 35, 58, 0.15);
     }
 
-    /* ۲. زیرعنوان دقیقاً با فونت ضخیم و مدرن مشکی‌رنگ */
+    /* زیرعنوان با فونت ضخیم و مدرن */
     .sub-title {
       margin-top: 0.2rem;
       font-size: 1.35rem;
@@ -86,12 +82,12 @@
       letter-spacing: -0.3px;
     }
 
-    /* تنظیمات واکنش‌گرایی برای موبایل */
+    /* واکنش‌گرایی برای موبایل */
     @media (max-width: 768px) {
       .header-container {
         flex-direction: column;
         text-align: center;
-        gap: 1.2rem;
+        gap: 1rem;
       }
       .text-holder {
         text-align: center;
@@ -102,13 +98,13 @@
       .sub-title {
         font-size: 1.1rem;
       }
-      .logo-holder {
-        width: 110px;
-        height: 110px;
+      .building-icon-box {
+        width: 70px;
+        height: 70px;
       }
-      .logo-holder svg {
-        width: 75px;
-        height: 75px;
+      .building-icon-box svg {
+        width: 60px;
+        height: 60px;
       }
     }
   </style>
@@ -119,20 +115,26 @@
   <header class="site-header">
     <div class="header-container">
       
-      <!-- دایره لوگوی مشکی و نارنجی -->
-      <div class="logo-holder">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M50 18 L68 32 V78 H58 V48 H42 V78 H32 V32 L50 18 Z" stroke="#FF7A00" stroke-width="3" stroke-linejoin="round"/>
-          <path d="M50 26 L60 34 V70 H54 V52 H46 V70 H40 V34 L50 26 Z" stroke="#FF7A00" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M22 55 L38 42 L50 52" stroke="#FF7A00" stroke-width="3" stroke-linecap="round"/>
-          <path d="M78 55 L62 42 L50 52" stroke="#FF7A00" stroke-width="3" stroke-linecap="round"/>
-          <path d="M38 52 V78" stroke="#FF7A00" stroke-width="3.5" stroke-linecap="round"/>
-          <path d="M62 52 L39 65 L62 78" stroke="#FF7A00" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M18 78 H82" stroke="#FF7A00" stroke-width="3" stroke-linecap="round"/>
+      <!-- آیکون خطی و بسیار ساده ساختمان (سرمه‌ای و طلایی) -->
+      <div class="building-icon-box">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- پایه و خط سقف -->
+          <path d="M8 56H56" stroke="#0D233A" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- برج و سقف شیب‌دار اصلی -->
+          <path d="M20 56V26L32 16L44 26V56" stroke="#0D233A" stroke-width="3.5" stroke-linejoin="round"/>
+          <path d="M12 34L20 27" stroke="#FF7A00" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M52 34L44 27" stroke="#FF7A00" stroke-width="3.5" stroke-linecap="round"/>
+          <!-- پنجره‌ها -->
+          <rect x="26" y="30" width="4" height="6" fill="#FF7A00"/>
+          <rect x="34" y="30" width="4" height="6" fill="#FF7A00"/>
+          <rect x="26" y="40" width="4" height="6" fill="#FF7A00"/>
+          <rect x="34" y="40" width="4" height="6" fill="#FF7A00"/>
+          <!-- درب ورودی -->
+          <path d="M28 56V49H36V56" fill="#0D233A"/>
         </svg>
       </div>
 
-      <!-- نوشته‌های سربرگ دقیقا طبق تصویر -->
+      <!-- نوشته‌ها با فونت نستعلیق و کیفیت بالا -->
       <div class="text-holder">
         <h1 class="main-title">مشاور املاک قدس (کریمی)</h1>
         <div class="sub-title">سامانه جامع و آنلاین املاک شهر اراک</div>
