@@ -1,87 +1,875 @@
+```html
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>پیش‌نمایش لوگوهای املاک قدس</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مشاور املاک قدس (کریمی) | سامانه جامع املاک اراک</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cream: '#F4EEE0',
+            navy: '#0D233A',
+            charcoal: '#121212',
+            accent: '#FF7A00',
+            accentHover: '#E06C00'
+          },
+          fontFamily: {
+            vazir: ['Vazirmatn', 'sans-serif'],
+            nastaliq: ['IranNastaliq', 'Vazirmatn', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Persian Web Fonts -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/iran-nastaliq@v2.0.0/iran-nastaliq.css">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Three.js for 3D Logo Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <style>
-    body {
-      background-color: #f4eee0; /* پس‌زمینه کرم اصلی */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      gap: 2rem;
-      padding: 2rem;
+    /* Custom Scrollbar & Utility Animations */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F4EEE0;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #0D233A;
+      border-radius: 4px;
     }
 
-    .logo-card {
-      background: #f4eee0;
-      border: 1px solid #e2d7c1;
-      border-radius: 16px;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      width: 280px;
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 215, 193, 0.6);
     }
 
-    .logo-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #121212;
+    /* Fullscreen Overlay for 3D Intro */
+    #intro-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      pointer-events: auto;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    svg {
-      width: 180px;
-      height: 180px;
+    #three-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10000;
+      pointer-events: none;
+    }
+
+    .pulse-glow {
+      box-shadow: 0 0 25px rgba(255, 122, 0, 0.4);
     }
   </style>
 </head>
-<body>
+<body class="bg-cream text-navy font-vazir min-h-screen antialiased overflow-x-hidden">
 
-  <!-- طرح ۱: نشان دایره‌ای مدرن با تلفیق K و Gh و خطوط شیروانی -->
-  <div class="logo-card">
-    <div class="logo-title">طرح ۱: دایره‌ای مدرن (تلفیق K و Gh)</div>
-    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- پس‌زمینه کرم -->
-      <rect width="200" height="200" rx="20" fill="#f4eee0"/>
-      <!-- دایره مشکی با سایه -->
-      <circle cx="100" cy="100" r="80" fill="#121212" stroke="#ff7a00" stroke-width="3"/>
-      <!-- نماد ترکیبی K و Gh با فرم شیروانی -->
-      <g stroke="#ff7a00" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-        <!-- خط عمودی K -->
-        <path d="M75 55 V140" />
-        <!-- شاخه‌های K که سقف شیروانی را می‌‌سازند -->
-        <path d="M75 95 L110 60 L140 90" />
-        <path d="M110 95 L145 130" />
-        <!-- منحنی حرف Gh / Q در زمینه پایین -->
-        <path d="M60 115 C 60 145, 100 150, 115 130" stroke="#f4eee0" stroke-width="4" />
-      </g>
-      <!-- نقطه نارنجی گویای لوکیشن و اصالت -->
-      <circle cx="110" cy="45" r="6" fill="#ff7a00"/>
-    </svg>
+  <!-- 3D Intro Background & Controls -->
+  <div id="intro-overlay" class="bg-charcoal/95 flex flex-col items-center justify-between p-8 text-center text-cream">
+    <div class="mt-8">
+      <span class="inline-block bg-accent/20 text-accent px-4 py-1.5 rounded-full text-xs font-bold tracking-wide uppercase border border-accent/40 mb-3">
+        تجربه سه‌بعدی اختصاصی
+      </span>
+      <h1 class="font-nastaliq text-4xl sm:text-6xl text-accent drop-shadow-lg">مشاور املاک قدس (کریمی)</h1>
+      <p class="text-gray-300 text-sm sm:text-base mt-2">خوش‌آمدید | سامانه تخصصی املاک شهر اراک</p>
+    </div>
+
+    <!-- Instructions / Skip trigger -->
+    <div class="mb-12 z-20">
+      <button id="skip-intro-btn" class="bg-accent hover:bg-accentHover text-white px-8 py-3 rounded-full font-bold text-sm shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
+        <span>ورود مستقیم به سایت</span>
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <p class="text-xs text-gray-400 mt-3 animate-pulse">در حال انتقال خودکار لوگوی ۳ بعدی به هدر...</p>
+    </div>
   </div>
 
-  <!-- طرح ۲: نشان هگزاگونال/مفهومی برج و حروف K + Gh -->
-  <div class="logo-card">
-    <div class="logo-title">طرح ۲: هندسی مینیمال (نماد برج)</div>
-    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="200" height="200" rx="20" fill="#f4eee0"/>
-      <!-- فریم مشکی -->
-      <path d="M100 20 L165 57 V143 L100 180 L35 143 V57 Z" fill="#121212" stroke="#ff7a00" stroke-width="2"/>
-      <!-- ساختار K + Gh -->
-      <path d="M70 60 V140" stroke="#ff7a00" stroke-width="8" stroke-linecap="round"/>
-      <path d="M70 100 L125 55" stroke="#ff7a00" stroke-width="8" stroke-linecap="round"/>
-      <path d="M95 80 L130 135" stroke="#ff7a00" stroke-width="8" stroke-linecap="round"/>
-      <!-- انحنای نمادین Gh -->
-      <path d="M130 135 C 110 160, 70 150, 50 130" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
-    </svg>
+  <!-- Global 3D WebGL Canvas Overlay -->
+  <canvas id="three-canvas"></canvas>
+
+  <!-- Main Header Navigation -->
+  <header class="sticky top-0 z-40 bg-cream/90 backdrop-blur-md border-b border-gray-300/60 shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand & 3D Dock Target Container -->
+      <div class="flex items-center gap-4">
+        <div id="logo-dock-target" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full border-2 border-accent bg-charcoal relative cursor-pointer group shadow-md transition-transform hover:scale-105" title="مشاهده مجدد لوگوی ۳ بعدی">
+          <div class="absolute inset-0 rounded-full bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </div>
+        <div>
+          <h1 class="font-nastaliq text-2xl sm:text-3xl font-bold text-navy leading-tight">مشاور املاک قدس</h1>
+          <p class="text-xs font-semibold text-gray-600">با مدیریت کریمی - اراک</p>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden md:flex items-center gap-6 font-semibold text-sm">
+        <a href="#search" class="hover:text-accent transition-colors">جستجوی ملک</a>
+        <a href="#featured" class="hover:text-accent transition-colors">املاک ویژه</a>
+        <a href="#about" class="hover:text-accent transition-colors">درباره ما</a>
+        <a href="#contact" class="hover:text-accent transition-colors">ارتباط با ما</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <button id="replay-btn" class="hidden sm:flex items-center gap-2 bg-charcoal text-cream hover:bg-navy px-3.5 py-2 rounded-lg text-xs font-bold transition-all border border-accent/40" title="بازپخش انیمیشن ۳ بعدی">
+          <i class="fa-solid fa-cube text-accent"></i>
+          <span>لوگوی ۳D</span>
+        </button>
+        <a href="tel:08630000000" class="bg-accent hover:bg-accentHover text-white px-4 py-2 rounded-lg font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition-all">
+          <i class="fa-solid fa-phone"></i>
+          <span class="hidden sm:inline">تماس سریع</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative py-12 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      
+      <!-- Text & Slogan -->
+      <div class="lg:col-span-7 text-right space-y-6">
+        <div class="inline-flex items-center gap-2 bg-accent/10 border border-accent/30 text-accent px-3 py-1.5 rounded-full text-xs font-bold">
+          <i class="fa-solid fa-star"></i>
+          <span>معتبرترین مرکز تخصصی املاک در استان مرکزی</span>
+        </div>
+        <h2 class="text-3xl sm:text-5xl font-black leading-tight text-navy">
+          سامانه جامع و آنلاین <br>
+          <span class="text-accent underline decoration-charcoal/20 underline-offset-8">املاک شهر اراک</span>
+        </h2>
+        <p class="text-gray-700 text-sm sm:text-base leading-relaxed max-w-2xl">
+          مشاور املاک قدس (کریمی) با دهه‌ها تجربه درخشان، بهترین گزینه‌های خرید، فروش، رهن و اجاره آپارتمان، زمین، ویلا و واحدهای تجاری در برترین مناطق اراک (خرم، جهان‌پناه، هپکو، مصطفی خمینی و ...) را ارائه می‌دهد.
+        </p>
+
+        <!-- Stats Counter -->
+        <div class="grid grid-cols-3 gap-4 pt-4 border-t border-gray-300/80">
+          <div>
+            <div class="text-2xl sm:text-3xl font-black text-accent">+۱۵۰۰</div>
+            <div class="text-xs text-gray-600 font-semibold">فایل فعال املاک</div>
+          </div>
+          <div>
+            <div class="text-2xl sm:text-3xl font-black text-navy">+۲۰</div>
+            <div class="text-xs text-gray-600 font-semibold">سال سابقه درخشان</div>
+          </div>
+          <div>
+            <div class="text-2xl sm:text-3xl font-black text-accent">۱۰۰٪</div>
+            <div class="text-xs text-gray-600 font-semibold">رضایت مشتریان</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual Display Card -->
+      <div class="lg:col-span-5 relative">
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-accent/40 bg-charcoal">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" alt="املاک اراک" class="w-full h-80 sm:h-96 object-cover opacity-90 hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal via-transparent to-transparent"></div>
+          <div class="absolute bottom-4 right-4 left-4 p-4 glass-card rounded-xl text-navy">
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="bg-accent text-white text-[10px] px-2 py-0.5 rounded font-bold">پیشنهاد ویژه</span>
+                <h3 class="font-bold text-sm mt-1">آپارتمان مدرن در خیابان خرم</h3>
+              </div>
+              <span class="text-accent font-black text-sm">۴٫۲ میلیارد</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Search & Filter Section -->
+  <section id="search" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-30">
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 sm:p-8">
+      <div class="flex flex-wrap items-center justify-between gap-4 mb-6 border-b border-gray-100 pb-4">
+        <h3 class="font-bold text-lg text-navy flex items-center gap-2">
+          <i class="fa-solid fa-magnifying-glass text-accent"></i>
+          <span>جستجوی پیشرفته املاک اراک</span>
+        </h3>
+        
+        <!-- Deal Type Tabs -->
+        <div class="flex bg-cream p-1 rounded-xl border border-gray-200">
+          <button id="deal-all" onclick="setDealFilter('all')" class="deal-btn px-4 py-1.5 rounded-lg text-xs font-bold transition-all bg-navy text-white shadow">همه موارد</button>
+          <button id="deal-buy" onclick="setDealFilter('خرید و فروش')" class="deal-btn px-4 py-1.5 rounded-lg text-xs font-bold text-gray-700 hover:text-navy transition-all">خرید و فروش</button>
+          <button id="deal-rent" onclick="setDealFilter('رهن و اجاره')" class="deal-btn px-4 py-1.5 rounded-lg text-xs font-bold text-gray-700 hover:text-navy transition-all">رهن و اجاره</button>
+        </div>
+      </div>
+
+      <!-- Search Filters Form -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Property Type -->
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">نوع ملک</label>
+          <select id="filter-type" class="w-full bg-cream/50 border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent font-semibold">
+            <option value="all">همه دسته‌ها</option>
+            <option value="آپارتمان">آپارتمان</option>
+            <option value="ویلایی">خانه ویلایی</option>
+            <option value="زمین">زمین / کلنگی</option>
+            <option value="تجاری">دفتر کار / تجاری</option>
+          </select>
+        </div>
+
+        <!-- Location in Arak -->
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">محدوده در اراک</label>
+          <select id="filter-location" class="w-full bg-cream/50 border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent font-semibold">
+            <option value="all">همه مناطق اراک</option>
+            <option value="خیابان خرم">خیابان خرم</option>
+            <option value="جهان‌پناه">جهان‌پناه</option>
+            <option value="هپکو">هپکو</option>
+            <option value="عباس‌آباد">عباس‌آباد</option>
+            <option value="مصطفی خمینی">مصطفی خمینی</option>
+            <option value="شریعتی">شریعتی</option>
+          </select>
+        </div>
+
+        <!-- Price Range -->
+        <div>
+          <label class="block text-xs font-bold text-gray-600 mb-1.5">حدود قیمت (تومان)</label>
+          <select id="filter-price" class="w-full bg-cream/50 border border-gray-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-accent font-semibold">
+            <option value="all">همه قیمت‌ها</option>
+            <option value="under2">زیر ۲ میلیارد</option>
+            <option value="2to5">۲ تا ۵ میلیارد</option>
+            <option value="above5">بالای ۵ میلیارد</option>
+          </select>
+        </div>
+
+        <!-- Submit Search -->
+        <div class="flex items-end">
+          <button onclick="applyFilters()" class="w-full bg-accent hover:bg-accentHover text-white font-bold p-3 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-filter"></i>
+            <span>اعمال فیلترها</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Properties Listings -->
+  <section id="featured" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h3 class="text-2xl font-black text-navy">جدیدترین املاک ثبت‌شده اراک</h3>
+        <p class="text-xs text-gray-600 mt-1">تایید شده توسط کارشناسان املاک قدس</p>
+      </div>
+      <span id="results-count" class="bg-navy text-cream text-xs font-bold px-3 py-1.5 rounded-full">۶ ملک یافت شد</span>
+    </div>
+
+    <!-- Grid Container -->
+    <div id="properties-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Cards generated via JS -->
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section id="about" class="bg-charcoal text-cream py-16 px-4 sm:px-6 lg:px-8 my-12">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h3 class="font-nastaliq text-4xl text-accent">چرا مشاور املاک قدس (کریمی)؟</h3>
+        <p class="text-gray-300 text-xs sm:text-sm mt-2">ارائه خدمات مشاوره حقوقی و ملکی با بالاترین استانداردهای شفافیت</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-accent transition-colors">
+          <div class="w-16 h-16 bg-accent/20 text-accent rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+            <i class="fa-solid fa-file-contract"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-2">استعلام دقیق کاداستر و سند</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">بررسی کامل وضعیت ثبتی و حقوقی تمامی املاک پیش از تنظیم قرارداد.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-accent transition-colors">
+          <div class="w-16 h-16 bg-accent/20 text-accent rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-2">قیمت‌گذاری کارشناسی دقیق</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">ارزیابی عادلانه قیمت املاک بر اساس آخرین معاملات منطقه اراک.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-accent transition-colors">
+          <div class="w-16 h-16 bg-accent/20 text-accent rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl">
+            <i class="fa-solid fa-handshake"></i>
+          </div>
+          <h4 class="font-bold text-lg mb-2">تنظیم قولنامه رسمی کد رهگیری‌دار</h4>
+          <p class="text-xs text-gray-400 leading-relaxed">عقد کلیه قراردادها تحت سامانه رسمی ثبت معاملات املاک و مستغلات کشور.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & Location -->
+  <section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden grid grid-cols-1 lg:grid-cols-12">
+      
+      <!-- Contact Info -->
+      <div class="lg:col-span-5 p-8 sm:p-12 flex flex-col justify-between">
+        <div>
+          <span class="text-xs font-bold text-accent uppercase tracking-wider">دفتر مرکزی</span>
+          <h3 class="text-3xl font-black text-navy mt-1">تماس با املاک قدس</h3>
+          <p class="text-gray-600 text-xs sm:text-sm mt-3">جهت مشاوره رایگان خرید، فروش یا اجاره ملک در اراک با ما در ارتباط باشید.</p>
+
+          <div class="space-y-4 mt-8 text-sm">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-cream flex items-center justify-center text-accent shrink-0">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div>
+                <strong class="block text-navy font-bold">آدرس دفتر:</strong>
+                <span class="text-gray-600 text-xs">اراک، خیابان قدس، نرسیده به میدان، دفتر مشاور املاک قدس (کریمی)</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-cream flex items-center justify-center text-accent shrink-0">
+                <i class="fa-solid fa-phone"></i>
+              </div>
+              <div>
+                <strong class="block text-navy font-bold">تلفن‌های تماس:</strong>
+                <span class="text-gray-600 text-xs">۰۸۶-۳۲۲۲۰۰۰۰ | ۰۹۱۲۳۴۵۶۷۸۹</span>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-cream flex items-center justify-center text-accent shrink-0">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <div>
+                <strong class="block text-navy font-bold">ساعات کاری:</strong>
+                <span class="text-gray-600 text-xs">همه‌روزه (بجز ایام تعطیل) از ۹ صبح الی ۹ شب</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Social & Quick Chat Buttons -->
+        <div class="pt-8 flex gap-3">
+          <a href="https://wa.me/989123456789" target="_blank" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-xl text-center text-xs flex items-center justify-center gap-2 transition-colors">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>واتساپ مستقیم</span>
+          </a>
+          <a href="tel:09123456789" class="flex-1 bg-navy hover:bg-charcoal text-white font-bold py-3 px-4 rounded-xl text-center text-xs flex items-center justify-center gap-2 transition-colors">
+            <i class="fa-solid fa-phone"></i>
+            <span>تماس مستقیم</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Map Visual Representation -->
+      <div class="lg:col-span-7 bg-charcoal relative min-h-[320px] flex items-center justify-center text-center p-6">
+        <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80" alt="نقشه اراک" class="absolute inset-0 w-full h-full object-cover opacity-30">
+        <div class="relative z-10 glass-card p-6 rounded-2xl max-w-sm text-navy">
+          <i class="fa-solid fa-map-pin text-3xl text-accent mb-2"></i>
+          <h4 class="font-bold">موقعیت مکانی اراک</h4>
+          <p class="text-xs text-gray-600 mt-1">جهت مراجعه حضوری و پذیرش فایل‌های شما در کلانشهر اراک</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-charcoal text-cream py-8 border-t border-accent/20 text-center text-xs">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <p>© ۱۴۰۳ کلیه حقوق این وب‌سایت متعلق به مشاور املاک قدس (کریمی اراک) می‌باشد.</p>
+      <div class="flex items-center gap-4 text-gray-400">
+        <button onclick="playLogoIntro()" class="hover:text-accent transition-colors flex items-center gap-1">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>تکرار انیمیشن ۳D</span>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal for Property Details -->
+  <div id="modal" class="fixed inset-0 z-50 bg-charcoal/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-gray-200 animate-fadeIn">
+      <div class="relative h-64">
+        <img id="modal-img" src="" class="w-full h-full object-cover">
+        <button onclick="closeModal()" class="absolute top-4 left-4 bg-charcoal/70 text-white w-9 h-9 rounded-full flex items-center justify-center hover:bg-accent transition-colors">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <span id="modal-badge" class="absolute bottom-4 right-4 bg-accent text-white font-bold text-xs px-3 py-1 rounded-full"></span>
+      </div>
+      <div class="p-6">
+        <h3 id="modal-title" class="text-xl font-bold text-navy"></h3>
+        <p id="modal-location" class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-location-dot text-accent"></i>
+          <span></span>
+        </p>
+        <div id="modal-specs" class="grid grid-cols-3 gap-3 my-4 py-3 border-y border-gray-100 text-xs font-semibold text-gray-700"></div>
+        <p id="modal-desc" class="text-xs text-gray-600 leading-relaxed mb-6"></p>
+        <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+          <div>
+            <span class="text-[10px] text-gray-400 block font-bold">قیمت کل:</span>
+            <span id="modal-price" class="text-lg font-black text-accent"></span>
+          </div>
+          <a href="tel:09123456789" class="bg-navy hover:bg-accent text-white px-6 py-2.5 rounded-xl font-bold text-xs transition-colors flex items-center gap-2">
+            <i class="fa-solid fa-phone"></i>
+            <span>تماس برای هماهنگی</span>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <script>
+    /* ==========================================
+       ۱. داده‌های نمونه املاک شهر اراک
+       ========================================== */
+    const propertiesData = [
+      {
+        id: 1,
+        title: "آپارتمان نوساز ۱۶۰ متری تک‌واحدی",
+        deal: "خرید و فروش",
+        type: "آپارتمان",
+        location: "خیابان خرم",
+        priceVal: 4.8,
+        priceStr: "۴٫۸ میلیارد تومان",
+        bedrooms: 3,
+        area: 160,
+        parking: "دارد",
+        img: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80",
+        desc: "واحد فوق‌العاده خوش‌نقشه با نورگیری عالی جنوب و شمال، سازه ضد زلزله، متریال درجه یک، دارای مسترروم و تراس قابل چیدمان در یکی از بهترین فرعی‌های خیابان خرم."
+      },
+      {
+        id: 2,
+        title: "خانه ویلایی ۲۵۰ متری دوبلکس",
+        deal: "خرید و فروش",
+        type: "ویلایی",
+        location: "جهان‌پناه",
+        priceVal: 7.2,
+        priceStr: "۷٫۲ میلیارد تومان",
+        bedrooms: 4,
+        area: 250,
+        parking: "دارد (۲ خودرو)",
+        img: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+        desc: "ویلایی با سند تک‌برگ ۶ دانگ، حیاط مشجر زیبا، بازسازی صفر تا صد با استخر روباز، مناسب سکونت یا سرمایه‌گذاری در منطقه اعیان‌نشین جهان‌پناه."
+      },
+      {
+        id: 3,
+        title: "آپارتمان ۹۵ متری رهن کامل",
+        deal: "رهن و اجاره",
+        type: "آپارتمان",
+        location: "هپکو",
+        priceVal: 0.5,
+        priceStr: "۵۰۰ میلیون تومان رهن کامل",
+        bedrooms: 2,
+        area: 95,
+        parking: "دارد",
+        img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
+        desc: "طبقه سوم با آسانسور و انباری بزرگ، کابینت MDF تازه نصب شده، نقاشی شده و آماده تحویل فوری."
+      },
+      {
+        id: 4,
+        title: "زمین بر اصلی مناسب ساخت و ساز",
+        deal: "خرید و فروش",
+        type: "زمین",
+        location: "مصطفی خمینی",
+        priceVal: 9.5,
+        priceStr: "۹٫۵ میلیارد تومان",
+        bedrooms: 0,
+        area: 310,
+        parking: "ندارد",
+        img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80",
+        desc: "زمین با بر ۱۲ متر، دستور نقشه M5 آماده صدور پروانه ساخت، بدون اصلاحی، ضابطه تجاری مسکونی."
+      },
+      {
+        id: 5,
+        title: "مغازه تجاری ۴۵ متری با بالکن",
+        deal: "خرید و فروش",
+        type: "تجاری",
+        location: "عباس‌آباد",
+        priceVal: 3.2,
+        priceStr: "۳٫۲ میلیارد تومان",
+        bedrooms: 0,
+        area: 45,
+        parking: "عمومی",
+        img: "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=800&q=80",
+        desc: "مغازه پاخور عالی بر اصلی، ارتفاع سقف ۴٫۵ متر، انشعابات کامل آب، برق، گاز و تلفن مجزا."
+      },
+      {
+        id: 6,
+        title: "آپارتمان ۱۱۰ متری شیک اجاره‌ای",
+        deal: "رهن و اجاره",
+        type: "آپارتمان",
+        location: "شریعتی",
+        priceVal: 0.2,
+        priceStr: "۲۰۰ م رهن + ۶ م اجاره",
+        bedrooms: 2,
+        area: 110,
+        parking: "دارد",
+        img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+        desc: "تخلیه سر برج، مجتمع خلوت و آرام با نگهبانی ۲۴ ساعته، سرمایش اسپلیت و گرمایش پکیج."
+      }
+    ];
+
+    let currentDealFilter = 'all';
+
+    function renderProperties(list) {
+      const grid = document.getElementById('properties-grid');
+      const countEl = document.getElementById('results-count');
+      countEl.innerText = `${list.length} ملک یافت شد`;
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center text-gray-500 bg-white/50 rounded-2xl border border-dashed border-gray-300">
+            <i class="fa-solid fa-house-circle-xmark text-4xl text-accent mb-3 block"></i>
+            <p class="font-bold text-sm">متاسفانه ملکی با مشخصات انتخابی شما یافت نشد.</p>
+            <button onclick="resetFilters()" class="mt-3 text-xs bg-navy text-white px-4 py-2 rounded-lg font-bold">نمایش همه املاک</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = list.map(item => `
+        <div class="bg-white rounded-2xl overflow-hidden border border-gray-200/80 shadow-md hover:shadow-xl transition-all duration-300 flex flex-col group">
+          <div class="relative h-52 overflow-hidden">
+            <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+            <span class="absolute top-3 right-3 bg-navy/90 backdrop-blur-md text-cream text-[11px] font-bold px-3 py-1 rounded-full border border-accent/30">
+              ${item.deal}
+            </span>
+            <span class="absolute bottom-3 left-3 bg-accent text-white text-[11px] font-black px-2.5 py-1 rounded-lg shadow">
+              ${item.type}
+            </span>
+          </div>
+
+          <div class="p-5 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-1 text-xs font-semibold text-gray-500 mb-1">
+                <i class="fa-solid fa-location-dot text-accent"></i>
+                <span>اراک، ${item.location}</span>
+              </div>
+              <h4 class="font-bold text-navy text-base leading-snug group-hover:text-accent transition-colors">${item.title}</h4>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-gray-100">
+              <div class="flex items-center justify-between text-xs text-gray-600 font-semibold mb-3">
+                <span><i class="fa-solid fa-bed text-gray-400 ml-1"></i> ${item.bedrooms > 0 ? item.bedrooms + ' خواب' : 'بدون خواب'}</span>
+                <span><i class="fa-solid fa-ruler-combined text-gray-400 ml-1"></i> ${item.area} متر</span>
+                <span><i class="fa-solid fa-square-parking text-gray-400 ml-1"></i> ${item.parking}</span>
+              </div>
+
+              <div class="flex items-center justify-between">
+                <span class="text-accent font-black text-sm">${item.priceStr}</span>
+                <button onclick="openModal(${item.id})" class="bg-cream hover:bg-navy hover:text-white text-navy font-bold text-xs px-3.5 py-2 rounded-xl transition-all">
+                  جزئیات ملک
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setDealFilter(deal) {
+      currentDealFilter = deal;
+      document.querySelectorAll('.deal-btn').forEach(btn => {
+        btn.classList.remove('bg-navy', 'text-white', 'shadow');
+        btn.classList.add('text-gray-700');
+      });
+      if (deal === 'all') document.getElementById('deal-all').classList.add('bg-navy', 'text-white', 'shadow');
+      if (deal === 'خرید و فروش') document.getElementById('deal-buy').classList.add('bg-navy', 'text-white', 'shadow');
+      if (deal === 'رهن و اجاره') document.getElementById('deal-rent').classList.add('bg-navy', 'text-white', 'shadow');
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const type = document.getElementById('filter-type').value;
+      const location = document.getElementById('filter-location').value;
+      const price = document.getElementById('filter-price').value;
+
+      const filtered = propertiesData.filter(item => {
+        if (currentDealFilter !== 'all' && item.deal !== currentDealFilter) return false;
+        if (type !== 'all' && item.type !== type) return false;
+        if (location !== 'all' && item.location !== location) return false;
+
+        if (price === 'under2' && item.priceVal >= 2) return false;
+        if (price === '2to5' && (item.priceVal < 2 || item.priceVal > 5)) return false;
+        if (price === 'above5' && item.priceVal <= 5) return false;
+
+        return true;
+      });
+
+      renderProperties(filtered);
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-type').value = 'all';
+      document.getElementById('filter-location').value = 'all';
+      document.getElementById('filter-price').value = 'all';
+      setDealFilter('all');
+    }
+
+    function openModal(id) {
+      const item = propertiesData.find(p => p.id === id);
+      if (!item) return;
+
+      document.getElementById('modal-img').src = item.img;
+      document.getElementById('modal-badge').innerText = item.deal + ' | ' + item.type;
+      document.getElementById('modal-title').innerText = item.title;
+      document.getElementById('modal-location').querySelector('span').innerText = 'اراک، ' + item.location;
+      document.getElementById('modal-desc').innerText = item.desc;
+      document.getElementById('modal-price').innerText = item.priceStr;
+
+      document.getElementById('modal-specs').innerHTML = `
+        <div class="bg-cream/60 p-2 rounded-lg text-center">متراژ: ${item.area} متر</div>
+        <div class="bg-cream/60 p-2 rounded-lg text-center">تعداد اتاق: ${item.bedrooms}</div>
+        <div class="bg-cream/60 p-2 rounded-lg text-center">پارکینگ: ${item.parking}</div>
+      `;
+
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+
+    /* ==========================================
+       ۲. ساخت لوگوی ۳ بعدی با Three.js و انیمیشن انتقال
+       ========================================== */
+    let scene, camera, renderer, logoGroup, goldMesh, discMesh;
+    let isDocked = false;
+    let animProgress = 0; // 0 = Center Screen, 1 = Docked in Header
+
+    function init3D() {
+      const canvas = document.getElementById('three-canvas');
+      renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 10);
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xff7a00, 1.5);
+      dirLight.position.set(5, 5, 8);
+      scene.add(dirLight);
+
+      const pointLight = new THREE.PointLight(0xffaa00, 2, 20);
+      pointLight.position.set(-5, -2, 5);
+      scene.add(pointLight);
+
+      // Create 3D Logo Group (Dark Disc + Golden 3D Geometry for K + Gh + Roof)
+      logoGroup = new THREE.Group();
+
+      // 1. Dark Base Disc
+      const discGeo = new THREE.CylinderGeometry(2.5, 2.5, 0.3, 64);
+      const discMat = new THREE.MeshStandardMaterial({
+        color: 0x121212,
+        roughness: 0.3,
+        metalness: 0.8
+      });
+      discMesh = new THREE.Mesh(discGeo, discMat);
+      discMesh.rotation.x = Math.PI / 2;
+      logoGroup.add(discMesh);
+
+      // 2. Outer Glowing Ring
+      const ringGeo = new THREE.TorusGeometry(2.45, 0.08, 16, 100);
+      const ringMat = new THREE.MeshStandardMaterial({
+        color: 0xff7a00,
+        emissive: 0xff4500,
+        emissiveIntensity: 0.6,
+        metalness: 0.9,
+        roughness: 0.1
+      });
+      const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+      ringMesh.position.z = 0.16;
+      logoGroup.add(ringMesh);
+
+      // 3. Architectural Roof & K+Gh Emblem Geometry
+      const lineGroup = new THREE.Group();
+      const goldMat = new THREE.MeshStandardMaterial({
+        color: 0xff7a00,
+        emissive: 0xff6600,
+        emissiveIntensity: 0.4,
+        metalness: 0.9,
+        roughness: 0.2
+      });
+
+      // Roof Peak (Triangle Shape)
+      const roofShape = new THREE.Shape();
+      roofShape.moveTo(0, 1.4);
+      roofShape.lineTo(1.2, 0.4);
+      roofShape.lineTo(0.9, 0.4);
+      roofShape.lineTo(0, 1.1);
+      roofShape.lineTo(-0.9, 0.4);
+      roofShape.lineTo(-1.2, 0.4);
+      roofShape.closePath();
+
+      const extrudeSettings = { depth: 0.15, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: 0.02, bevelThickness: 0.02 };
+      const roofGeo = new THREE.ExtrudeGeometry(roofShape, extrudeSettings);
+      const roofMesh = new THREE.Mesh(roofGeo, goldMat);
+      roofMesh.position.z = 0.16;
+      lineGroup.add(roofMesh);
+
+      // Pillar & Letter 'K' & 'Gh' Structural Elements
+      const boxGeo = new THREE.BoxGeometry(0.2, 1.8, 0.15);
+      const leftPillar = new THREE.Mesh(boxGeo, goldMat);
+      leftPillar.position.set(-0.5, -0.2, 0.24);
+      lineGroup.add(leftPillar);
+
+      const diagonalK1 = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.2, 0.15), goldMat);
+      diagonalK1.rotation.z = -Math.PI / 4;
+      diagonalK1.position.set(0.1, 0.1, 0.24);
+      lineGroup.add(diagonalK1);
+
+      const diagonalK2 = new THREE.Mesh(new THREE.BoxGeometry(0.18, 1.2, 0.15), goldMat);
+      diagonalK2.rotation.z = Math.PI / 4;
+      diagonalK2.position.set(0.2, -0.5, 0.24);
+      lineGroup.add(diagonalK2);
+
+      // Base Foundation Line
+      const baseGeo = new THREE.BoxGeometry(2.8, 0.15, 0.15);
+      const baseMesh = new THREE.Mesh(baseGeo, goldMat);
+      baseMesh.position.set(0, -1.2, 0.24);
+      lineGroup.add(baseMesh);
+
+      logoGroup.add(lineGroup);
+
+      // Initial Position & Scale
+      logoGroup.position.set(0, 0, 0);
+      logoGroup.scale.set(1.4, 1.4, 1.4);
+      scene.add(logoGroup);
+
+      // Resize Listener
+      window.addEventListener('resize', onWindowResize);
+
+      // Mouse Hover Effect on 3D Object
+      window.addEventListener('mousemove', onMouseMove);
+
+      animate();
+    }
+
+    let mouseX = 0, mouseY = 0;
+    function onMouseMove(e) {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // Helper: Calculate Target Position for Header Docking
+    function getDockTargetPosition() {
+      const targetEl = document.getElementById('logo-dock-target');
+      if (!targetEl) return { x: -3, y: 3, scale: 0.25 };
+
+      const rect = targetEl.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      // Convert Screen Pixel Coordinates to 3D World Coordinates
+      const vec = new THREE.Vector3(
+        (centerX / window.innerWidth) * 2 - 1,
+        -(centerY / window.innerHeight) * 2 + 1,
+        0.5
+      );
+      vec.unproject(camera);
+      const dir = vec.sub(camera.position).normalize();
+      const distance = -camera.position.z / dir.z;
+      const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+
+      return { x: pos.x, y: pos.y, scale: 0.22 };
+    }
+
+    function playLogoIntro() {
+      isDocked = false;
+      animProgress = 0;
+      document.getElementById('intro-overlay').style.opacity = '1';
+      document.getElementById('intro-overlay').style.pointerEvents = 'auto';
+
+      // Auto Dock after 3.5 seconds
+      setTimeout(() => {
+        dockLogoToHeader();
+      }, 3500);
+    }
+
+    function dockLogoToHeader() {
+      isDocked = true;
+      document.getElementById('intro-overlay').style.opacity = '0';
+      document.getElementById('intro-overlay').style.pointerEvents = 'none';
+    }
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (!isDocked) {
+        // Continuous rotation during full 3D intro
+        logoGroup.rotation.y += 0.02;
+        logoGroup.rotation.x = Math.sin(Date.now() * 0.002) * 0.15;
+        logoGroup.position.set(0, 0, 0);
+        logoGroup.scale.set(1.3, 1.3, 1.3);
+      } else {
+        // Lerp towards Docked Target Position
+        if (animProgress < 1) {
+          animProgress += 0.03;
+        }
+
+        const target = getDockTargetPosition();
+
+        logoGroup.position.x += (target.x - logoGroup.position.x) * 0.1;
+        logoGroup.position.y += (target.y - logoGroup.position.y) * 0.1;
+
+        const currentScale = logoGroup.scale.x;
+        const newScale = currentScale + (target.scale - currentScale) * 0.1;
+        logoGroup.scale.set(newScale, newScale, newScale);
+
+        // Subtle interactive tilt when hovering docked header
+        logoGroup.rotation.y += (mouseX * 0.5 - logoGroup.rotation.y) * 0.08;
+        logoGroup.rotation.x += (-mouseY * 0.3 - logoGroup.rotation.x) * 0.08;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    window.onload = function() {
+      renderProperties(propertiesData);
+      init3D();
+
+      document.getElementById('skip-intro-btn').addEventListener('click', dockLogoToHeader);
+      document.getElementById('replay-btn').addEventListener('click', playLogoIntro);
+      document.getElementById('logo-dock-target').addEventListener('click', playLogoIntro);
+
+      // Auto start docking after initial showcase
+      setTimeout(() => {
+        dockLogoToHeader();
+      }, 3200);
+    };
+  </script>
 </body>
 </html>
+```
