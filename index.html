@@ -4,19 +4,112 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>مشاور املاک قدس (کریمی)</title>
-
-  <!-- ۱. کدهای CSS (استایل‌ها) اینجا داخل تگ style قرار می‌گیرند -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  
   <style>
-    /* کدهای ظاهر، رنگ کرم زمینه، لوگو و فونت‌ها اینجا نوشته می‌شوند */
+    /* ۱. استایل کلی و رنگ زمینه کرم */
+    body {
+      background-color: #f9f6f0;
+      color: #2c2c2c;
+      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+    }
+
+    /* ۲. استایل هدر بالای صفحه */
+    .main-header {
+      background-color: #ffffff;
+      border-bottom: 2px solid #e0d8c8;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    /* ۳. لوگوی دایره‌ای مشکی با خطوط نارنجی */
+    .logo-wrapper {
+      width: 65px;
+      height: 65px;
+      background-color: #121212;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #ff6b00;
+      box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+      flex-shrink: 0;
+    }
+
+    .logo-wrapper svg {
+      width: 38px;
+      height: 38px;
+      fill: none;
+      stroke: #ff6b00;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ۴. متون هدر */
+    .header-titles h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #1a1a1a;
+    }
+
+    .header-titles p {
+      margin: 0.3rem 0 0 0;
+      font-size: 0.95rem;
+      color: #666666;
+    }
+
+    /* محتوای اصلی صفحه */
+    .main-content {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
   </style>
 </head>
 <body>
 
-  <!-- ۲. کدهای HTML (محتوای صفحه، هدر، لوگو و دکمه‌ها) اینجا قرار می‌گیرند -->
+  <!-- هدر اصلی -->
+  <header class="main-header">
+    <div class="header-container">
+      
+      <!-- لوگوی اختصاصی مشکی و نارنجی -->
+      <div class="logo-wrapper">
+        <svg viewBox="0 0 24 24">
+          <path d="M3 21h18" />
+          <path d="M5 21V7l7-4 7 4v14" />
+          <path d="M9 10h1" />
+          <path d="M14 10h1" />
+          <path d="M9 14h1" />
+          <path d="M14 14h1" />
+          <path d="M11 21v-4h2v4" />
+        </svg>
+      </div>
 
-  <!-- ۳. کدهای JavaScript (کارهای تعاملی و عملیاتی) این پایین داخل تگ script قرار می‌گیرند -->
-  <script>
-    // برنامه‌نویسی بخش‌های تعاملی
-  </script>
+      <!-- عناوین هدر -->
+      <div class="header-titles">
+        <h1>مشاور املاک قدس (کریمی)</h1>
+        <p>سامانه جامع و آنلاین املاک شهر اراک</p>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- بخش محتوا (در گام‌های بعدی تکمیل می‌شود) -->
+  <main class="main-content">
+  </main>
+
 </body>
 </html>
