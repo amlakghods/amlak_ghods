@@ -1,82 +1,86 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مشاور املاک قدس (کریمی) - اراک</title>
+  <title>مشاور املاک قدس (کریمی)</title>
   
-  <!-- فونت فارسی وزیر متن - برای فونت شیک و خوانا -->
+  <!-- فونت ایران‌نستعلیق برای عنوان اصلی و وزیرمتن برای زیرعنوان -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
-  
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/iran-nastaliq@v2.0.0/iran-nastaliq.css" rel="stylesheet">
+
   <style>
-    /* ۱. استایل کلی و رنگ زمینه کرم شیک */
+    /* ۱. پس‌زمینه اصلی کرم روشن مطابق تصویر */
     body {
-      background-color: #f9f6f0; /* رنگ کرم روشن مطابق تصویر */
-      color: #2c2c2c;
-      font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif;
+      background-color: #f4eee0;
+      color: #1a1a1a;
+      font-family: 'Vazirmatn', sans-serif;
       margin: 0;
       padding: 0;
       direction: rtl;
     }
 
-    /* ۲. استایل هدر بالای صفحه */
-    .main-header {
-      background-color: #ffffff;
-      border-bottom: 2px solid #e0d8c8;
-      padding: 1rem 2rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    /* ۲. هدر بالای صفحه */
+    .header-banner {
+      background-color: #f4eee0;
+      padding: 2rem;
+      border-bottom: 1px solid #e2d7c5;
     }
 
     .header-container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 2rem;
     }
 
-    /* ۳. جایگاه لوگو (تصویر لوگوی خاص از روی عکس) */
-    .logo-container {
-      width: 80px;  /* اندازه بزرگتر برای دیده شدن جزئیات */
-      height: 80px;
+    /* ۳. لوگوی دقیق دایره‌ای مشکی با خطوط نارنجی (نماد ساختمان + حرف K) */
+    .logo-circle {
+      width: 110px;
+      height: 110px;
+      background-color: #121212;
       border-radius: 50%;
-      overflow: hidden; /* برش دایره‌ای */
-      background-color: #121212; /* پس‌زمینه مشکی */
-      border: 3px solid #ff6b00; /* حاشیه نارنجی مطابق عکس */
-      box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
       flex-shrink: 0;
     }
 
-    /* !!! مهم: شما باید عکس لوگوی خودتان را جایگزین کنید !!! */
-    .logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain; /* حفظ تناسب عکس */
-      /* نکته: اگر لوگو پس‌زمینه مشکی دارد، مستقیماً از روی عکس برش دهید و اینجا قرار دهید */
+    .logo-circle svg {
+      width: 75px;
+      height: 75px;
     }
 
-    /* ۴. متون هدر با فونت و رنگ سرمه‌ای */
-    .header-titles {
-      color: #0c173c; /* رنگ سرمه‌ای مطابق عکس */
+    /* ۴. بخش متون و عناوین هدر */
+    .header-text {
+      display: flex;
+      flex-direction: column;
     }
 
-    .header-titles h1 {
+    /* عنوان اصلی با خط نستعلیق و رنگ سرمه‌ای */
+    .header-text h1 {
       margin: 0;
-      font-size: 1.8rem; /* فونت بزرگ و شیک */
-      font-weight: 800;
-      letter-spacing: -0.5px;
+      font-family: 'IranNastaliq', 'Vazirmatn', serif;
+      font-size: 3.2rem;
+      color: #0b1e36; /* رنگ سرمه‌ای مطابق عکس */
+      line-height: 1.4;
+      font-weight: normal;
     }
 
-    .header-titles p {
-      margin: 0.3rem 0 0 0;
-      font-size: 1.1rem;
-      color: #0c173c;
-      font-weight: 500;
+    /* زیرعنوان با فونت ساده و خوانا */
+    .header-text p {
+      margin: -0.2rem 0 0 0;
+      font-size: 1.25rem;
+      color: #1a1a1a;
+      font-weight: 700;
     }
 
-    /* محتوای اصلی صفحه */
-    .main-content {
-      max-width: 1200px;
+    /* بخش بدنه اصلی برای گام‌های بعدی */
+    .main-container {
+      max-width: 1100px;
       margin: 2rem auto;
       padding: 0 1rem;
     }
@@ -84,19 +88,28 @@
 </head>
 <body>
 
-  <!-- هدر اصلی -->
-  <header class="main-header">
+  <header class="header-banner">
     <div class="header-container">
       
-      <!-- ۱. جایگاه لوگو: تصویر لوگوی خاص مشکی با حرف K و خطوط نارنجی -->
-      <div class="logo-container">
-        <!-- شما باید فایل لوگوی خودتان را با فرمت .png یا .jpg در اینجا قرار دهید -->
-        <!-- مثلاً فایل را برش دهید و نام آن را logo.png بگذارید -->
-        <img src="logo.png" alt="لوگوی املاک قدس">
+      <!-- لوگوی دایره‌ای مشکی با خطوط نارنجی/طلایی (دقیقاً مشابه عکس) -->
+      <div class="logo-circle">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- سقف‌ها و سقف ساختمان‌ها -->
+          <path d="M50 15 L78 38 V78 H66 V50 H34 V78 H22 V38 L50 15 Z" stroke="#FF7A00" stroke-width="3.5" stroke-linejoin="round"/>
+          <path d="M50 27 L68 42 V70 H58 V48 H42 V70 H32 V42 L50 27 Z" stroke="#FF7A00" stroke-width="3" stroke-linejoin="round"/>
+          <!-- پنجره‌ها -->
+          <rect x="45" y="34" width="4" height="6" rx="1" fill="#FF7A00"/>
+          <rect x="51" y="34" width="4" height="6" rx="1" fill="#FF7A00"/>
+          <!-- نماد حرف K ترکیبی در پایین لوگو -->
+          <path d="M38 52 V80" stroke="#FF7A00" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M58 54 L39 67 L58 80" stroke="#FF7A00" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- خط افقی پایه -->
+          <path d="M18 80 H82" stroke="#FF7A00" stroke-width="3.5" stroke-linecap="round"/>
+        </svg>
       </div>
 
-      <!-- ۲. عناوین هدر با فونت شیک -->
-      <div class="header-titles">
+      <!-- متون هدر -->
+      <div class="header-text">
         <h1>مشاور املاک قدس (کریمی)</h1>
         <p>سامانه جامع و آنلاین املاک شهر اراک</p>
       </div>
@@ -104,8 +117,7 @@
     </div>
   </header>
 
-  <!-- بخش محتوا (در گام‌های بعدی تکمیل می‌شود) -->
-  <main class="main-content">
+  <main class="main-container">
   </main>
 
 </body>
