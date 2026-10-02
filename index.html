@@ -1,123 +1,166 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مشاور املاک قدس (کریمی)</title>
+  <title>مشاور املاک قدس (کریمی) - اراک</title>
   
-  <!-- فونت ایران‌نستعلیق برای عنوان اصلی و وزیرمتن برای زیرعنوان -->
+  <!-- فونت‌های رسمی فارسی -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
   <link href="https://cdn.jsdelivr.net/gh/rastikerdar/iran-nastaliq@v2.0.0/iran-nastaliq.css" rel="stylesheet">
 
   <style>
-    /* ۱. پس‌زمینه اصلی کرم روشن مطابق تصویر */
-    body {
-      background-color: #f4eee0;
-      color: #1a1a1a;
-      font-family: 'Vazirmatn', sans-serif;
+    /* ۱. تنظیمات کلی و رنگ زمینه دقیق کرم */
+    :root {
+      --bg-cream: #f4eee0;
+      --navy-blue: #0b1e36;
+      --orange-gold: #ff7a00;
+      --black-card: #121212;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: #1a1a1a;
+      font-family: 'Vazirmatn', -apple-system, sans-serif;
       direction: rtl;
+      min-height: 100vh;
     }
 
-    /* ۲. هدر بالای صفحه */
-    .header-banner {
-      background-color: #f4eee0;
-      padding: 2rem;
-      border-bottom: 1px solid #e2d7c5;
+    /* ۲. ساختار اصلی بنر بالای صفحه (مطابق تصویر) */
+    .hero-banner {
+      width: 100%;
+      background-color: var(--bg-cream);
+      padding: 3rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
 
-    .header-container {
-      max-width: 1100px;
-      margin: 0 auto;
+    .brand-container {
       display: flex;
       align-items: center;
-      gap: 2rem;
+      justify-content: center;
+      gap: 2.5rem;
+      max-width: 1200px;
+      width: 100%;
     }
 
-    /* ۳. لوگوی دقیق دایره‌ای مشکی با خطوط نارنجی (نماد ساختمان + حرف K) */
-    .logo-circle {
-      width: 110px;
-      height: 110px;
-      background-color: #121212;
+    /* ۳. طراحی دقیق لوگوی دایره‌ای مشکی با هاله نارنجی و نماد K */
+    .logo-wrapper {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      background-color: var(--black-card);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 0 25px rgba(255, 122, 0, 0.35), 0 10px 30px rgba(0, 0, 0, 0.4);
+      border: 2px solid var(--orange-gold);
       flex-shrink: 0;
     }
 
-    .logo-circle svg {
-      width: 75px;
-      height: 75px;
+    .logo-wrapper svg {
+      width: 100px;
+      height: 100px;
     }
 
-    /* ۴. بخش متون و عناوین هدر */
-    .header-text {
+    /* ۴. تنظیم متون دقیق با فونت خطاطی نستعلیق و رنگ سرمه‌ای */
+    .brand-titles {
       display: flex;
       flex-direction: column;
+      justify-content: center;
+      text-align: right;
     }
 
-    /* عنوان اصلی با خط نستعلیق و رنگ سرمه‌ای */
-    .header-text h1 {
-      margin: 0;
+    .brand-title-main {
       font-family: 'IranNastaliq', 'Vazirmatn', serif;
-      font-size: 3.2rem;
-      color: #0b1e36; /* رنگ سرمه‌ای مطابق عکس */
-      line-height: 1.4;
+      font-size: 3.8rem;
+      color: var(--navy-blue);
+      line-height: 1.3;
       font-weight: normal;
+      text-shadow: 0.5px 0.5px 0px rgba(11, 30, 54, 0.2);
+      margin-bottom: 0.2rem;
     }
 
-    /* زیرعنوان با فونت ساده و خوانا */
-    .header-text p {
-      margin: -0.2rem 0 0 0;
-      font-size: 1.25rem;
-      color: #1a1a1a;
+    .brand-title-sub {
+      font-size: 1.35rem;
+      color: #1c2738;
       font-weight: 700;
+      letter-spacing: -0.3px;
     }
 
-    /* بخش بدنه اصلی برای گام‌های بعدی */
-    .main-container {
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+    /* طراحی واکنش‌گرا برای موبایل */
+    @media (max-width: 768px) {
+      .hero-banner {
+        padding: 2rem 1rem;
+      }
+      .brand-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+      }
+      .brand-titles {
+        text-align: center;
+      }
+      .logo-wrapper {
+        width: 110px;
+        height: 110px;
+      }
+      .logo-wrapper svg {
+        width: 80px;
+        height: 80px;
+      }
+      .brand-title-main {
+        font-size: 2.8rem;
+      }
+      .brand-title-sub {
+        font-size: 1.1rem;
+      }
     }
   </style>
 </head>
 <body>
 
-  <header class="header-banner">
-    <div class="header-container">
+  <!-- بنر هدر اصلی سایت املاک قدس -->
+  <header class="hero-banner">
+    <div class="brand-container">
       
-      <!-- لوگوی دایره‌ای مشکی با خطوط نارنجی/طلایی (دقیقاً مشابه عکس) -->
-      <div class="logo-circle">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- سقف‌ها و سقف ساختمان‌ها -->
-          <path d="M50 15 L78 38 V78 H66 V50 H34 V78 H22 V38 L50 15 Z" stroke="#FF7A00" stroke-width="3.5" stroke-linejoin="round"/>
-          <path d="M50 27 L68 42 V70 H58 V48 H42 V70 H32 V42 L50 27 Z" stroke="#FF7A00" stroke-width="3" stroke-linejoin="round"/>
-          <!-- پنجره‌ها -->
-          <rect x="45" y="34" width="4" height="6" rx="1" fill="#FF7A00"/>
-          <rect x="51" y="34" width="4" height="6" rx="1" fill="#FF7A00"/>
-          <!-- نماد حرف K ترکیبی در پایین لوگو -->
-          <path d="M38 52 V80" stroke="#FF7A00" stroke-width="4.5" stroke-linecap="round"/>
-          <path d="M58 54 L39 67 L58 80" stroke="#FF7A00" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <!-- خط افقی پایه -->
-          <path d="M18 80 H82" stroke="#FF7A00" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- لوگوی دایره‌ای مشکی اختصاصی با خطوط نارنجی (طرح ترکیبی K و ساختمان) -->
+      <div class="logo-wrapper">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- ساختار خطوط برج و ساختمان‌ها -->
+          <path d="M60 18L88 40V82H75V52H45V82H32V40L60 18Z" stroke="#FF7A00" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M60 30L78 44V74H67V50H53V74H42V44L60 30Z" stroke="#FF7A00" stroke-width="3" stroke-linejoin="round"/>
+          <!-- پنجره‌های نورانی نارنجی -->
+          <rect x="54" y="38" width="5" height="7" rx="1" fill="#FF7A00"/>
+          <rect x="61" y="38" width="5" height="7" rx="1" fill="#FF7A00"/>
+          <!-- حرف K هندسی و یکپارچه شده در ساختار -->
+          <path d="M44 58V86" stroke="#FF7A00" stroke-width="5" stroke-linecap="round"/>
+          <path d="M68 60L46 73L68 86" stroke="#FF7A00" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- خط افقی شالوده -->
+          <path d="M22 86H98" stroke="#FF7A00" stroke-width="4" stroke-linecap="round"/>
         </svg>
       </div>
 
-      <!-- متون هدر -->
-      <div class="header-text">
-        <h1>مشاور املاک قدس (کریمی)</h1>
-        <p>سامانه جامع و آنلاین املاک شهر اراک</p>
+      <!-- عناوین اصلی و زیرعنوان -->
+      <div class="brand-titles">
+        <h1 class="brand-title-main">مشاور املاک قدس (کریمی)</h1>
+        <p class="brand-title-sub">سامانه جامع و آنلاین املاک شهر اراک</p>
       </div>
 
     </div>
   </header>
 
-  <main class="main-container">
+  <!-- بستر آماده برای ساخت بخش‌های بعدی پنل -->
+  <main style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem;">
   </main>
 
 </body>
