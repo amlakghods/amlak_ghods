@@ -1,110 +1,144 @@
-/* ==========================================
-   ۱. تنظیمات پایه و متغیرهای رنگی پروژه
-   ========================================== */
-:root {
-  --bg-cream: #f4eee0;       /* رنگ پس‌زمینه اصلی کرم روشن */
-  --navy-blue: #0b1e36;      /* رنگ سرمه‌ای برای عناوین و متن‌ها */
-  --orange-gold: #ff7a00;    /* رنگ نارنجی/طلایی لوگو و حاشیه‌ها */
-  --black-card: #121212;     /* رنگ مشکی برای پس‌زمینه لوگو */
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background-color: var(--bg-cream);
-  color: #1a1a1a;
-  font-family: system-ui, -apple-system, sans-serif;
-  direction: rtl;
-  min-height: 100vh;
-}
-
-/* ==========================================
-   ۲. استایل هدر و بنر اصلی (طرح مطابق عکس)
-   ========================================== */
-.main-header {
-  background-color: var(--bg-cream);
-  padding: 2.5rem 1rem;
-  border-bottom: 1px solid #e0d6c3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.header-container {
-  max-width: 1200px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5rem;
-}
-
-/* ==========================================
-   ۳. تنظیمات لوگوی دایره‌ای مشکی و بزرگ
-   ========================================== */
-.logo-box {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: var(--black-card);
-  border: 3px solid var(--orange-gold);
-  box-shadow: 0 0 25px rgba(255, 122, 0, 0.4), 0 8px 20px rgba(0, 0, 0, 0.3);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-box img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* ==========================================
-   ۴. جایگاه تصویر متن خطاطی اختصاصی
-   ========================================== */
-.brand-title-img {
-  max-width: 480px;
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* ==========================================
-   ۵. بخش بدنه اصلی برای ماژول‌های بعدی
-   ========================================== */
-.main-container {
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-/* ==========================================
-   ۶. واکنش‌گرایی برای صفحات کوچک و موبایل
-   ========================================== */
-@media (max-width: 768px) {
-  .main-header {
-    padding: 1.5rem 1rem;
-  }
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مشاور املاک قدس (کریمی)</title>
   
-  .header-container {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-  
-  .logo-box {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .brand-title-img {
-    max-width: 320px;
-  }
-}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css">
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/iran-nastaliq@v2.0.0/iran-nastaliq.css" rel="stylesheet">
 
+  <style>
+    /* ۱. رنگ پس‌زمینه دقیقا مطابق دیوار کرم‌رنگ تصویر */
+    body {
+      background-color: #f3ece0;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      font-family: 'Vazirmatn', sans-serif;
+    }
+
+    /* ۲. ساختار هدر و بنر اصلی */
+    .header-banner {
+      background-color: #f3ece0;
+      padding: 3rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .header-container {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+
+    /* ۳. دایره مشکی با نورپردازی نارنجی دور آن (دقیقاً مثل تابلو) */
+    .logo-circle {
+      width: 160px;
+      height: 160px;
+      background-color: #121212;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* هاله نور نارنجی پشت دایره */
+      box-shadow: 0 0 35px rgba(255, 122, 0, 0.45), 0 10px 25px rgba(0, 0, 0, 0.3);
+      flex-shrink: 0;
+    }
+
+    .logo-circle svg {
+      width: 115px;
+      height: 115px;
+    }
+
+    /* ۴. متون هدر */
+    .header-text {
+      display: flex;
+      flex-direction: column;
+      text-align: right;
+    }
+
+    /* عنوان اصلی با خط نستعلیق و رنگ سرمه‌ای پررنگ */
+    .header-text h1 {
+      margin: 0;
+      font-family: 'IranNastaliq', 'Vazirmatn', serif;
+      font-size: 4.2rem;
+      color: #0d233a; /* سرمه‌ای دقیق تابلوی تصویر */
+      line-height: 1.2;
+      font-weight: bold;
+      /* سایه ملایم برای ایجاد حس برجستگی تابلو */
+      text-shadow: 1px 1px 1px rgba(13, 35, 58, 0.2);
+    }
+
+    /* زیرعنوان با فونت ساده و مشکی */
+    .header-text p {
+      margin: 0.2rem 0 0 0;
+      font-size: 1.4rem;
+      color: #1a1a1a;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+    }
+
+    @media (max-width: 768px) {
+      .header-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+      }
+      .header-text {
+        text-align: center;
+      }
+      .header-text h1 {
+        font-size: 3.2rem;
+      }
+      .logo-circle {
+        width: 130px;
+        height: 130px;
+      }
+      .logo-circle svg {
+        width: 90px;
+        height: 90px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header-banner">
+    <div class="header-container">
+      
+      <!-- لوگوی دقیق با جزئیات کامل هندسی ساختمان و حرف K -->
+      <div class="logo-circle">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- ساختار برج‌ها و سقف‌ها -->
+          <path d="M50 18 L68 32 V78 H58 V48 H42 V78 H32 V32 L50 18 Z" stroke="#FF7A00" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M50 26 L60 34 V70 H54 V52 H46 V70 H40 V34 L50 26 Z" stroke="#FF7A00" stroke-width="2.5" stroke-linejoin="round"/>
+          <rect x="47" y="38" width="2.5" height="4" fill="#FF7A00"/>
+          <rect x="50.5" y="38" width="2.5" height="4" fill="#FF7A00"/>
+          
+          <!-- سقف‌های جانبی شیب‌دار -->
+          <path d="M22 55 L38 42 L50 52" stroke="#FF7A00" stroke-width="3" stroke-linecap="round"/>
+          <path d="M78 55 L62 42 L50 52" stroke="#FF7A00" stroke-width="3" stroke-linecap="round"/>
+          
+          <!-- ساختار پایه و حرف K ترکیبی -->
+          <path d="M38 52 V78" stroke="#FF7A00" stroke-width="3.5" stroke-linecap="round"/>
+          <path d="M62 52 L39 65 L62 78" stroke="#FF7A00" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 78 H82" stroke="#FF7A00" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- عناوین هدر -->
+      <div class="header-text">
+        <h1>مشاور املاک قدس (کریمی)</h1>
+        <p>سامانه جامع و آنلاین املاک شهر اراک</p>
+      </div>
+
+    </div>
+  </header>
+
+</body>
+</html>
