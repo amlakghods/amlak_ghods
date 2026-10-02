@@ -2,27 +2,86 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مشاور املاک قدس (کریمی)</title>
+  <title>پیش‌نمایش لوگوهای املاک قدس</title>
   <style>
     body {
-      background-color: #f3ece0;
+      background-color: #f4eee0; /* پس‌زمینه کرم اصلی */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       margin: 0;
-      padding: 0;
-      text-align: center;
+      font-family: system-ui, sans-serif;
+      gap: 2rem;
+      padding: 2rem;
     }
-    .header-img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 0 auto;
+
+    .logo-card {
+      background: #f4eee0;
+      border: 1px solid #e2d7c1;
+      border-radius: 16px;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      width: 280px;
+    }
+
+    .logo-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #121212;
+    }
+
+    svg {
+      width: 180px;
+      height: 180px;
     }
   </style>
 </head>
 <body>
 
-  <!-- این عکس مستقیم تابلوی اصلی شما رو بالای سایت نشون میده -->
-  <img src="https://s6.uupload.ir/files/1000045862_4_8w9h.jpg" alt="مشاور املاک قدس کریمی" class="header-img">
+  <!-- طرح ۱: نشان دایره‌ای مدرن با تلفیق K و Gh و خطوط شیروانی -->
+  <div class="logo-card">
+    <div class="logo-title">طرح ۱: دایره‌ای مدرن (تلفیق K و Gh)</div>
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- پس‌زمینه کرم -->
+      <rect width="200" height="200" rx="20" fill="#f4eee0"/>
+      <!-- دایره مشکی با سایه -->
+      <circle cx="100" cy="100" r="80" fill="#121212" stroke="#ff7a00" stroke-width="3"/>
+      <!-- نماد ترکیبی K و Gh با فرم شیروانی -->
+      <g stroke="#ff7a00" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <!-- خط عمودی K -->
+        <path d="M75 55 V140" />
+        <!-- شاخه‌های K که سقف شیروانی را می‌‌سازند -->
+        <path d="M75 95 L110 60 L140 90" />
+        <path d="M110 95 L145 130" />
+        <!-- منحنی حرف Gh / Q در زمینه پایین -->
+        <path d="M60 115 C 60 145, 100 150, 115 130" stroke="#f4eee0" stroke-width="4" />
+      </g>
+      <!-- نقطه نارنجی گویای لوکیشن و اصالت -->
+      <circle cx="110" cy="45" r="6" fill="#ff7a00"/>
+    </svg>
+  </div>
+
+  <!-- طرح ۲: نشان هگزاگونال/مفهومی برج و حروف K + Gh -->
+  <div class="logo-card">
+    <div class="logo-title">طرح ۲: هندسی مینیمال (نماد برج)</div>
+    <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="200" height="200" rx="20" fill="#f4eee0"/>
+      <!-- فریم مشکی -->
+      <path d="M100 20 L165 57 V143 L100 180 L35 143 V57 Z" fill="#121212" stroke="#ff7a00" stroke-width="2"/>
+      <!-- ساختار K + Gh -->
+      <path d="M70 60 V140" stroke="#ff7a00" stroke-width="8" stroke-linecap="round"/>
+      <path d="M70 100 L125 55" stroke="#ff7a00" stroke-width="8" stroke-linecap="round"/>
+      <path d="M95 80 L130 135" stroke="#ff7a00" stroke-width="8" stroke-linecap="round"/>
+      <!-- انحنای نمادین Gh -->
+      <path d="M130 135 C 110 160, 70 150, 50 130" stroke="#ffffff" stroke-width="4" stroke-linecap="round" fill="none"/>
+    </svg>
+  </div>
 
 </body>
 </html>
