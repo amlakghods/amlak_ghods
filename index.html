@@ -755,10 +755,39 @@ function goAdmin(){
   renderAdminLists(); renderAdminRequests();
   window.scrollTo(0,0);
 }
+const ADMIN_PASSWORD = 'Ghods@Karimi1404';
+const ADMIN_HASH = '#mgmt-7f3a9bq2';
+const LOCKOUT_MS = 5*60*1000;
+function isLockedOut(){
+  const until = parseInt(localStorage.getItem('adminLockUntil')||'0',10);
+  return until > Date.now();
+}
+function lockoutRemainingMin(){
+  const until = parseInt(localStorage.getItem('adminLockUntil')||'0',10);
+  return Math.ceil((until - Date.now())/60000);
+}
 function checkAdminPass(){
+  if(isLockedOut()){
+    document.getElementById('adminPassError').textContent = 'چند بار رمز اشتباه زده شد. '+lockoutRemainingMin()+' دقیقه دیگه دوباره امتحان کن.';
+    document.getElementById('adminPassError').style.display='block';
+    return;
+  }
   const pass=document.getElementById('adminPassInput').value;
-  if(pass==='1122'){ closeAdminModal(); goAdmin(); showToast('وارد پنل مدیریت شدی ✓'); }
-  else{ document.getElementById('adminPassError').style.display='block'; }
+  if(pass===ADMIN_PASSWORD){
+    localStorage.removeItem('adminFailCount'); localStorage.removeItem('adminLockUntil');
+    closeAdminModal(); goAdmin(); showToast('وارد پنل مدیریت شدی ✓');
+  } else {
+    const fails = parseInt(localStorage.getItem('adminFailCount')||'0',10) + 1;
+    localStorage.setItem('adminFailCount', String(fails));
+    if(fails >= 5){
+      localStorage.setItem('adminLockUntil', String(Date.now() + LOCKOUT_MS));
+      localStorage.setItem('adminFailCount','0');
+      document.getElementById('adminPassError').textContent = 'چند بار رمز اشتباه زده شد. ۵ دقیقه دیگه دوباره امتحان کن.';
+    } else {
+      document.getElementById('adminPassError').textContent = 'رمز اشتباهه، دوباره امتحان کن';
+    }
+    document.getElementById('adminPassError').style.display='block';
+  }
 }
 document.getElementById('adminPassInput').addEventListener('keydown', e=>{ if(e.key==='Enter') checkAdminPass(); });
 
@@ -766,8 +795,8 @@ document.getElementById('adminPassInput').addEventListener('keydown', e=>{ if(e.
 renderReqCategorySelect();
 renderLisCategorySelect();
 renderPublicLists();
-if(window.location.hash==='#admin1122') goAdmin();
-window.addEventListener('hashchange', ()=>{ if(window.location.hash==='#admin1122') goAdmin(); });
+if(window.location.hash===ADMIN_HASH) goAdmin();
+window.addEventListener('hashchange', ()=>{ if(window.location.hash===ADMIN_HASH) goAdmin(); });
 
 </script>
 </body>
