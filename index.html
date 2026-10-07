@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>مشاورین املاک قدس (کریمی)</title>
+<title>مشاور املاک قدس (کریمی)</title>
 <meta name="theme-color" content="#0E3A66">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -11,10 +11,10 @@
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230E3A66'/%3E%3Ctext x='50' y='65' font-size='55' text-anchor='middle'%3E%F0%9F%8F%9B%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F5F6F8; --surface:#FFFFFF; --ink:#16202B; --ink-soft:#5B6672;
+  --bg:#F7F1E3; --surface:#FFFBF2; --ink:#16202B; --ink-soft:#5B6672;
   --line:#E1E5EA; --blue:#0E3A66; --blue-deep:#092747; --gold:#D9B65C; --gold-deep:#B8943A;
   --danger:#B4483A; --green:#2E9E5B;
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
@@ -23,12 +23,18 @@
 html,body{height:100%;}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Vazirmatn',sans-serif;line-height:1.6;-webkit-tap-highlight-color:transparent;}
 header{position:sticky;top:0;z-index:10;padding:calc(18px + env(safe-area-inset-top,0px)) 18px 18px;
-  background:linear-gradient(135deg,#0E3A66,#154E86);color:#fff;border-bottom:3px solid var(--gold);}
-header h1{margin:0;font-size:19px;font-weight:700;color:var(--gold);}
-header p{margin:5px 0 0;font-size:12.5px;color:#CFE0F0;}
+  background:linear-gradient(135deg,#F3E9D4,#EADFC4);color:#2B2013;border-bottom:3px solid var(--blue);
+  display:flex; align-items:center; gap:14px;}
+header .building-icon{flex:0 0 auto; width:52px; height:52px;}
+header .header-text{flex:1; min-width:0;}
+header h1{margin:0;font-size:25px;font-weight:400;color:var(--blue);font-family:'Noto Nastaliq Urdu',serif;line-height:1.8;}
+header p{margin:3px 0 0;font-size:12px;color:#5B4C32;}
+header p.tagline{font-weight:600;}
 nav{display:flex;gap:6px;padding:10px 12px;overflow-x:auto;background:var(--surface);border-bottom:1px solid var(--line);}
 nav button{flex:0 0 auto;border:1px solid var(--line);background:transparent;color:var(--ink-soft);padding:9px 16px;border-radius:100px;font-family:inherit;font-size:13.5px;font-weight:500;cursor:pointer;}
 nav button.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+nav button{display:flex; flex-direction:column; align-items:center; line-height:1.3;}
+.nav-sub{font-size:10px; font-weight:400; opacity:0.75; margin-top:1px;}
 main{max-width:640px;margin:0 auto;padding:18px;padding-bottom:60px;}
 .view{display:none;} .view.active{display:block;}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 14px rgba(0,0,0,.05);}
@@ -86,14 +92,37 @@ textarea{resize:vertical;min-height:70px;}
 </head>
 <body>
 
-<header>
-  <h1 onclick="handleLogoTap()" style="cursor:pointer;">مشاورین املاک قدس (کریمی)</h1>
-  <p>ثبت درخواست مشتری، ثبت فایل ملک و مشاهده آگهی‌ها</p>
+<header onclick="handleLogoTap()" style="cursor:pointer;">
+  <svg class="building-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="14" y="20" width="18" height="36" stroke="#0E3A66" stroke-width="2.4"/>
+    <rect x="32" y="10" width="18" height="46" stroke="#0E3A66" stroke-width="2.4"/>
+    <line x1="19" y1="27" x2="19" y2="27.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="27" y1="27" x2="27" y2="27.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="19" y1="35" x2="19" y2="35.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="27" y1="35" x2="27" y2="35.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="19" y1="43" x2="19" y2="43.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="27" y1="43" x2="27" y2="43.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="38" y1="18" x2="38" y2="18.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="45" y1="18" x2="45" y2="18.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="38" y1="26" x2="38" y2="26.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="45" y1="26" x2="45" y2="26.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="38" y1="34" x2="38" y2="34.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="45" y1="34" x2="45" y2="34.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="38" y1="42" x2="38" y2="42.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="45" y1="42" x2="45" y2="42.1" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+    <line x1="10" y1="56" x2="54" y2="56" stroke="#0E3A66" stroke-width="2.4" stroke-linecap="round"/>
+  </svg>
+  <div class="header-text">
+    <h1>مشاور املاک قدس (کریمی)</h1>
+    <p class="tagline">سامانه جامع و آنلاین املاک شهر اراک</p>
+    <p>ارائه خدمات املاک و مستغلات</p>
+    <p>بیش از ۲۰ سال سابقه</p>
+  </div>
 </header>
 
 <nav>
-  <button data-view="request" class="active">ثبت درخواست مشتری</button>
-  <button data-view="submit">ثبت فایل ملک</button>
+  <button data-view="submit">ثبت فایل ملک<span class="nav-sub">ثبت فروش و اجاره</span></button>
+  <button data-view="request" class="active">ثبت درخواست مشتری<span class="nav-sub">خرید و اجاره</span></button>
   <button data-view="browse">فایل‌ها و درخواست‌ها</button>
   <button data-view="contact">ارتباط با دفتر</button>
 </nav>
@@ -180,7 +209,7 @@ textarea{resize:vertical;min-height:70px;}
   <section class="view" id="view-contact">
     <div class="card" style="text-align:center">
       <div style="font-size:40px;margin-bottom:6px;">🏛</div>
-      <h2 style="padding-bottom:0; margin-bottom:8px;">مشاورین املاک قدس (کریمی)</h2>
+      <h2 style="padding-bottom:0; margin-bottom:8px;">مشاور املاک قدس (کریمی)</h2>
       <p class="hint" style="text-align:center">همیشه در دسترس شما هستیم</p>
       <div style="text-align:right;border-top:1px solid var(--line);padding:14px 2px;margin-top:6px;">
         <div class="field-help">تماس تلفنی</div>
@@ -715,7 +744,7 @@ function dataUrlToFile(dataUrl,name){
 }
 async function shareListing(idx){
   const l=load('listings')[idx]; if(!l) return;
-  const text=`ملک ${l.category||l.type} [${l.code}]\n${specLine(l)}\n💰 ${listingPriceLabel(l)}\n${l.note?'📝 '+l.note:''}\nمشاورین املاک قدس (کریمی)\n📞 08633661572 | واتساپ: 09351891081`;
+  const text=`ملک ${l.category||l.type} [${l.code}]\n${specLine(l)}\n💰 ${listingPriceLabel(l)}\n${l.note?'📝 '+l.note:''}\nمشاور املاک قدس (کریمی)\n📞 08633661572 | واتساپ: 09351891081`;
   const files=(l.photos||[]).map((d,i)=>dataUrlToFile(d,'photo'+(i+1)+'.jpg'));
   if(files.length && navigator.canShare && navigator.canShare({files})){
     try{ await navigator.share({files,text}); return; } catch(e){ if(e&&e.name==='AbortError') return; }
