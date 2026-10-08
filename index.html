@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -30,7 +31,8 @@
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;}
-html,body{height:100%;}
+html{height:100%;}
+body{min-height:100%;display:flex;flex-direction:column;}
 body{margin:0;background-color:var(--bg);color:var(--ink);font-family:'Vazirmatn',sans-serif;line-height:1.6;-webkit-tap-highlight-color:transparent;}
 header{position:sticky;top:0;z-index:10;padding:calc(18px + env(safe-area-inset-top,0px)) 18px 18px;
   background:linear-gradient(135deg,#F3E9D4,#EADFC4);color:var(--blue);border-bottom:3px solid var(--blue);
@@ -45,7 +47,8 @@ nav button{flex:0 0 auto;border:1px solid var(--line);background:transparent;col
 nav button.active{background:var(--blue);color:#fff;border-color:var(--blue);}
 nav button{display:flex; flex-direction:column; align-items:center; line-height:1.3;}
 .nav-sub{font-size:10px; font-weight:400; opacity:0.75; margin-top:1px;}
-main{max-width:640px;margin:0 auto;padding:18px;padding-bottom:100px;}
+main{max-width:640px;width:100%;margin:0 auto;padding:18px;flex:1 0 auto;}
+.site-foot{max-width:640px;margin:0 auto;padding:12px 18px calc(96px + env(safe-area-inset-bottom,0px));text-align:center;font-size:12px;line-height:1.7;color:var(--ink-soft);}
 .view{display:none;} .view.active{display:block;}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 14px rgba(0,0,0,.05);}
 h2{font-size:17px;margin:0 0 4px;position:relative;padding-bottom:10px;}
@@ -127,6 +130,18 @@ textarea{resize:vertical;min-height:70px;}
 .prop-title{font-size:15.5px;font-weight:700;}
 .prop-price{font-size:17px;font-weight:700;color:#9A7420;margin:4px 0;}
 .prop-spec{font-size:12.5px;color:var(--ink-soft);line-height:1.8;}
+/* --- step choices --- */
+.choice-grid{display:grid;gap:10px;margin-top:6px;}
+.choice-btn{display:flex;justify-content:space-between;align-items:center;width:100%;padding:16px 16px;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--blue);font-family:inherit;font-size:16px;font-weight:700;cursor:pointer;text-align:right;}
+.choice-btn:active{background:rgba(14,58,102,.1);border-color:var(--blue);}
+.choice-summary{display:flex;justify-content:space-between;align-items:center;background:rgba(14,58,102,.07);border-radius:10px;padding:8px 12px;margin-bottom:14px;font-weight:700;color:var(--blue);font-size:14px;}
+.choice-summary button{border:1px solid var(--blue);background:transparent;color:var(--blue);border-radius:8px;padding:4px 12px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;}
+/* --- photo background --- */
+#bgPhoto{position:fixed;inset:0;z-index:0;overflow:hidden;background:#cfdde8;pointer-events:none;}
+#bgImg{position:absolute;inset:-6%;background:url("bg.jpg") 50% 55%/cover no-repeat;transform:translate3d(0,0,0) scale(1.08);will-change:transform;}
+#bgPhoto::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(6,27,51,.06) 0%,rgba(6,27,51,.0) 40%,rgba(6,27,51,.38) 100%);}
+nav,main,.site-foot{position:relative;z-index:1;}
+.site-foot{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.65);}
 /* --- code + favorite --- */
 .prop-code{position:absolute;top:10px;left:10px;background:rgba(14,58,102,.88);color:#fff;font-size:11.5px;font-weight:700;padding:3px 11px;border-radius:100px;direction:ltr;letter-spacing:.5px;}
 .fav-btn{position:absolute;bottom:10px;right:10px;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.93);color:var(--blue);font-size:22px;line-height:1;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);padding:0;}
@@ -144,6 +159,7 @@ textarea{resize:vertical;min-height:70px;}
 </style>
 </head>
 <body>
+<div id="bgPhoto" aria-hidden="true"><div id="bgImg"></div></div>
 <div id="splash" onclick="hideSplash()">
   <svg viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g class="sp-build">
@@ -187,7 +203,7 @@ textarea{resize:vertical;min-height:70px;}
 
 <nav>
   <button data-view="submit">ثبت فایل ملک<span class="nav-sub">فروش · اجاره · مشارکت در ساخت</span></button>
-  <button data-view="request" class="active">ثبت درخواست مشتری<span class="nav-sub">خرید · اجاره · مشارکت در ساخت</span></button>
+  <button data-view="request">ثبت درخواست مشتری<span class="nav-sub">خرید · اجاره · مشارکت در ساخت</span></button>
   <button data-view="browse">فایل‌ها و درخواست‌ها</button>
   <button data-view="fav">گزینه دلخواه<span class="nav-sub">آگهی‌های ذخیره‌شده ♥</span></button>
   <button data-view="contact">ارتباط با دفتر</button>
@@ -196,11 +212,11 @@ textarea{resize:vertical;min-height:70px;}
 <main>
 
   <!-- ============ CLIENT REQUEST ============ -->
-  <section class="view active" id="view-request">
+  <section class="view" id="view-request">
     <div class="card">
       <h2>ثبت درخواست مشتری</h2>
       <p class="hint">چه ملکی دنبالش هستید؟</p>
-      <label>نوع درخواست</label>
+      <div style="display:none"><label>نوع درخواست</label>
       <select id="reqMainType" onchange="renderReqCategorySelect()">
         <option value="خرید">خرید</option>
         <option value="رهن و اجاره">رهن و اجاره</option>
@@ -209,7 +225,8 @@ textarea{resize:vertical;min-height:70px;}
       <div id="reqCategoryWrap" style="display:none">
         <label>نوع ملک</label>
         <select id="reqCategory" onchange="renderReqForm()"></select>
-      </div>
+      </div></div>
+      <div id="reqChoices"></div>
       <form id="reqForm" onsubmit="return submitRequest(event)">
         <div id="reqFieldsBox"></div>
         <button type="submit" class="btn">ثبت درخواست</button>
@@ -231,7 +248,7 @@ textarea{resize:vertical;min-height:70px;}
     <div class="card">
       <h2>ثبت فایل ملک</h2>
       <p class="hint">مشخصات ملک به همراه عکس (حداکثر ۵ عکس)</p>
-      <label>نوع فایل</label>
+      <div style="display:none"><label>نوع فایل</label>
       <select id="lisMainType" onchange="renderLisCategorySelect()">
         <option value="فروش">فروش</option>
         <option value="رهن و اجاره">رهن و اجاره</option>
@@ -240,7 +257,8 @@ textarea{resize:vertical;min-height:70px;}
       <div id="lisCategoryWrap" style="display:none">
         <label>نوع ملک</label>
         <select id="lisCategory" onchange="renderLisForm()"></select>
-      </div>
+      </div></div>
+      <div id="lisChoices"></div>
       <form id="lisForm" onsubmit="return submitListing(event)">
         <div id="lisFieldsBox"></div>
         <button type="submit" class="btn">ثبت فایل</button>
@@ -327,9 +345,8 @@ textarea{resize:vertical;min-height:70px;}
     </div>
     <div class="note">اطلاعات فقط روی همین مرورگر ذخیره می‌شود (دیتابیس مشترک نداریم).</div>
   </section>
-
-  <p class="field-help" style="text-align:center;margin-top:8px">مشاور املاک قدس (کریمی) در اراک؛ خرید و فروش، رهن و اجاره آپارتمان، ویلایی، باغ و زمین، مغازه تجاری و کارگاهی و مشارکت در ساخت.</p>
 </main>
+<footer class="site-foot">مشاور املاک قدس (کریمی) در اراک؛ خرید و فروش، رهن و اجاره آپارتمان، ویلایی، باغ و زمین، مغازه تجاری و کارگاهی و مشارکت در ساخت.</footer>
 
 <div id="quickBar">
   <a class="qb call" href="tel:09120946501">📞 تماس با مدیریت</a>
@@ -832,9 +849,12 @@ document.querySelectorAll('nav button').forEach(btn=>{
     document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     btn.classList.add('active');
+    document.body.classList.add('has-view');
     document.getElementById('view-'+btn.dataset.view).classList.add('active');
     if(btn.dataset.view==='browse') renderPublicLists();
     if(btn.dataset.view==='fav') renderFavs();
+    if(btn.dataset.view==='submit') resetChoices('lis');
+    if(btn.dataset.view==='request') resetChoices('req');
   });
 });
 let logoTapCount=0, logoTapTimer=null;
@@ -855,6 +875,7 @@ function goAdmin(){
   document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-admin').classList.add('active');
+  document.body.classList.add('has-view');
   renderAdminLists(); renderAdminRequests();
   window.scrollTo(0,0);
 }
@@ -1011,6 +1032,75 @@ function renderFavs(){
     : idxs.map(i=>listingCard(all[i],i)).join('');
 }
 
+/* ============== step-by-step choices (file / request) ============== */
+const choiceState={lis:{main:null,cat:null},req:{main:null,cat:null}};
+const CH_ICON={'فروش':'🏷','خرید':'🛍','رهن و اجاره':'🔑','مشارکت در ساخت':'🏗','آپارتمان':'🏢','ویلایی':'🏡','باغ و زمین':'🌳','مغازه تجاری':'🏪','کارگاهی صنعتی':'🏭'};
+function renderChoices(pf){
+  const st=choiceState[pf];
+  const mainSel=document.getElementById(pf+'MainType'), catSel=document.getElementById(pf+'Category');
+  const form=document.getElementById(pf+'Form'), box=document.getElementById(pf+'Choices');
+  const chip=(label,fn)=>`<button type="button" class="choice-btn" onclick="${fn}"><span>${CH_ICON[label]||'•'} ${label}</span><span>‹</span></button>`;
+  const summary=txt=>`<div class="choice-summary"><span>${txt}</span><button type="button" onclick="resetChoices('${pf}')">تغییر</button></div>`;
+  if(!st.main){
+    box.innerHTML=`<label>${pf==='lis'?'نوع فایل':'نوع درخواست'} رو انتخاب کنید</label><div class="choice-grid">`+Array.from(mainSel.options).map(o=>chip(o.value,`pickMain('${pf}','${o.value}')`)).join('')+`</div>`;
+    form.style.display='none'; return;
+  }
+  if(st.cat===null){
+    box.innerHTML=summary(st.main)+`<label>نوع ملک رو انتخاب کنید</label><div class="choice-grid">`+Array.from(catSel.options).map(o=>chip(o.value,`pickCat('${pf}','${o.value}')`)).join('')+`</div>`;
+    form.style.display='none'; return;
+  }
+  box.innerHTML=summary(st.main+(st.cat?' › '+st.cat:''));
+  form.style.display='block';
+}
+function pickMain(pf,val){
+  const st=choiceState[pf]; st.main=val;
+  document.getElementById(pf+'MainType').value=val;
+  (pf==='lis'?renderLisCategorySelect:renderReqCategorySelect)();
+  st.cat = document.getElementById(pf+'Category').options.length>0 ? null : '';
+  renderChoices(pf);
+}
+function pickCat(pf,val){
+  const st=choiceState[pf]; st.cat=val;
+  document.getElementById(pf+'Category').value=val;
+  (pf==='lis'?renderLisForm:renderReqForm)();
+  renderChoices(pf);
+}
+function resetChoices(pf){
+  choiceState[pf]={main:null,cat:null};
+  const sent=document.getElementById(pf+'Sent'); if(sent) sent.style.display='none';
+  renderChoices(pf);
+}
+
+/* ============== photo parallax (mouse / touch / tilt) ============== */
+(function(){
+  const img=document.getElementById('bgImg'); if(!img) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let tx=0,ty=0,cx=0,cy=0,base=null;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  window.addEventListener('mousemove',e=>{ tx=(e.clientX/innerWidth-0.5)*2; ty=(e.clientY/innerHeight-0.5)*2; },{passive:true});
+  window.addEventListener('touchmove',e=>{ const t=e.touches[0]; if(!t) return; tx=(t.clientX/innerWidth-0.5)*2; ty=(t.clientY/innerHeight-0.5)*2; },{passive:true});
+  function onTilt(e){
+    if(e.gamma==null||e.beta==null) return;
+    if(base===null) base=e.beta;
+    tx=clamp(e.gamma/22,-1,1); ty=clamp((e.beta-base)/22,-1,1);
+  }
+  window.addEventListener('deviceorientation',onTilt,true);
+  function askTilt(){
+    if(window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission==='function'){
+      DeviceOrientationEvent.requestPermission().catch(()=>{});
+    }
+    window.removeEventListener('touchstart',askTilt); window.removeEventListener('click',askTilt);
+  }
+  window.addEventListener('touchstart',askTilt,{passive:true}); window.addEventListener('click',askTilt);
+  function frame(){
+    requestAnimationFrame(frame);
+    if(document.hidden) return;
+    cx+=(tx-cx)*0.07; cy+=(ty-cy)*0.07;
+    img.style.transform='translate3d('+(-cx*20).toFixed(2)+'px,'+(-cy*12).toFixed(2)+'px,0) rotate('+(cx*0.9).toFixed(3)+'deg) scale(1.1)';
+  }
+  frame();
+})();
+
 /* ============== init ============== */
 buildPublicSearch();
 buildSearchBox('admSearchBox','adm','renderAdminLists()','جستجو: نام مالک، منطقه یا کد...');
@@ -1019,9 +1109,10 @@ renderReqCategorySelect();
 renderLisCategorySelect();
 renderPublicLists();
 renderFavs();
+resetChoices('lis'); resetChoices('req');
 if(window.location.hash===ADMIN_HASH) goAdmin();
 window.addEventListener('hashchange', ()=>{ if(window.location.hash===ADMIN_HASH) goAdmin(); });
 
 </script>
 </body>
-</html>
+  </html>
