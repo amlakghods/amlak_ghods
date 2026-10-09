@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -15,6 +14,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"RealEstateAgent","name":"مشاور املاک قدس (کریمی)","alternateName":"املاک قدس","description":"سامانه جامع و آنلاین املاک شهر اراک؛ خرید، فروش، رهن و اجاره و مشارکت در ساخت با بیش از ۲۰ سال سابقه","telephone":["+988633661572","+989183678017","+989120946501"],"address":{"@type":"PostalAddress","streetAddress":"بلوار فاطمیه، روبروی بانک ملت، بهاران ۱۱","addressLocality":"اراک","addressCountry":"IR"},"areaServed":"اراک","sameAs":["https://instagram.com/amlak_ghods"]}
 </script>
+<link rel="preload" as="image" href="bg.jpg">
 <meta name="theme-color" content="#0E3A66">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -137,8 +137,14 @@ textarea{resize:vertical;min-height:70px;}
 .choice-summary{display:flex;justify-content:space-between;align-items:center;background:rgba(14,58,102,.07);border-radius:10px;padding:8px 12px;margin-bottom:14px;font-weight:700;color:var(--blue);font-size:14px;}
 .choice-summary button{border:1px solid var(--blue);background:transparent;color:var(--blue);border-radius:8px;padding:4px 12px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;}
 /* --- photo background --- */
-#bgPhoto{position:fixed;inset:0;z-index:0;overflow:hidden;background:#cfdde8;pointer-events:none;}
-#bgImg{position:absolute;inset:-6%;background:url("bg.jpg") 50% 55%/cover no-repeat;transform:translate3d(0,0,0) scale(1.08);will-change:transform;}
+#bgPhoto{--bgurl:url("bg.jpg");position:fixed;inset:0;z-index:0;overflow:hidden;background:linear-gradient(#c7dbef 0%,#b3c6d6 55%,#9aa5ac 100%);pointer-events:none;}
+#bgBlur,#bgImg{position:absolute;opacity:0;transition:opacity .8s ease;background-image:var(--bgurl);background-repeat:no-repeat;}
+#bgBlur{inset:-8%;background-size:cover;background-position:center;filter:blur(28px);transform:scale(1.1);}
+#bgImg{inset:0;background-size:contain;background-position:50% 50%;transform:translate3d(0,0,0);will-change:transform;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent);mask-image:linear-gradient(to bottom,transparent,#000 10%,#000 90%,transparent);}
+#bgPhoto.ready #bgBlur,#bgPhoto.ready #bgImg{opacity:1;}
+@media (min-aspect-ratio:1/1){
+  #bgImg{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);}
+}
 #bgPhoto::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(6,27,51,.06) 0%,rgba(6,27,51,.0) 40%,rgba(6,27,51,.38) 100%);}
 nav,main,.site-foot{position:relative;z-index:1;}
 .site-foot{color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.65);}
@@ -159,7 +165,7 @@ nav,main,.site-foot{position:relative;z-index:1;}
 </style>
 </head>
 <body>
-<div id="bgPhoto" aria-hidden="true"><div id="bgImg"></div></div>
+<div id="bgPhoto" aria-hidden="true"><div id="bgBlur"></div><div id="bgImg"></div></div>
 <div id="splash" onclick="hideSplash()">
   <svg viewBox="0 0 320 260" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g class="sp-build">
@@ -846,6 +852,7 @@ async function shareListing(idx){
 /* ============== nav + admin access ============== */
 document.querySelectorAll('nav button').forEach(btn=>{
   btn.addEventListener('click', ()=>{
+    if(btn.classList.contains('active')){ collapseView(); return; }
     document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
     btn.classList.add('active');
@@ -857,6 +864,16 @@ document.querySelectorAll('nav button').forEach(btn=>{
     if(btn.dataset.view==='request') resetChoices('req');
   });
 });
+function collapseView(){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.body.classList.remove('has-view');
+}
+document.addEventListener('click',function(e){
+  if(!document.querySelector('.view.active')) return;
+  if(e.target.closest && e.target.closest('.view.active, nav, #quickBar, .modal-overlay')) return;
+  collapseView();
+},true);
 let logoTapCount=0, logoTapTimer=null;
 function handleLogoTap(){
   logoTapCount++;
@@ -925,11 +942,11 @@ document.getElementById('adminPassInput').addEventListener('keydown', e=>{ if(e.
   const sets=[[[120,150,180],[44,72,100,128,156,184],20],[[50,74],[145,173,201],18],[[230,254],[115,143,171,199],18]];
   let out='';
   sets.forEach(([xs,ys,w])=>xs.forEach(x=>ys.forEach(y=>{
-    const d=(0.6+Math.random()*1.3).toFixed(2);
+    const d=(0.6+Math.random()*3.3).toFixed(2);
     out+=`<rect class="sp-win" x="${x}" y="${y}" width="${w}" height="16" rx="1.5" style="animation-delay:${d}s${Math.random()<0.25?';animation:none':''}"/>`;
   })));
   g.innerHTML=out;
-  setTimeout(hideSplash,2600);
+  setTimeout(hideSplash,4600);
 })();
 function hideSplash(){
   const sp=document.getElementById('splash'); if(!sp||sp.classList.contains('hide')) return;
@@ -1096,9 +1113,16 @@ function resetChoices(pf){
     requestAnimationFrame(frame);
     if(document.hidden) return;
     cx+=(tx-cx)*0.07; cy+=(ty-cy)*0.07;
-    img.style.transform='translate3d('+(-cx*20).toFixed(2)+'px,'+(-cy*12).toFixed(2)+'px,0) rotate('+(cx*0.9).toFixed(3)+'deg) scale(1.1)';
+    img.style.transform='translate3d('+(-cx*10).toFixed(2)+'px,'+(-cy*6).toFixed(2)+'px,0) rotate('+(cx*0.5).toFixed(3)+'deg)';
   }
   frame();
+})();
+
+/* ============== background photo loader ============== */
+(function(){
+  var done=function(){ var p=document.getElementById('bgPhoto'); if(p) p.classList.add('ready'); };
+  var im=new Image(); im.onload=done; im.onerror=done; im.src='bg.jpg';
+  if(im.complete) done();
 })();
 
 /* ============== init ============== */
@@ -1115,4 +1139,4 @@ window.addEventListener('hashchange', ()=>{ if(window.location.hash===ADMIN_HASH
 
 </script>
 </body>
-  </html>
+</html>
