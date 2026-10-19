@@ -451,9 +451,9 @@ function formatMoney(el){
 function load(key){ try{ return JSON.parse(localStorage.getItem(key) || "[]"); }catch(e){ return []; } }
 function save(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); return true; }catch(e){ return false; } }
 function nextCode(prefix, counterKey){
-  let n = 0;
-  try{ n = parseInt(localStorage.getItem(counterKey) || '0', 10) + 1; localStorage.setItem(counterKey, String(n)); }catch(e){ n = Date.now()%10000; }
-  return prefix + '-' + String(n).padStart(4,'0');
+  let n = 100;
+  try{ n = parseInt(localStorage.getItem(counterKey) || '99', 10) + 1; if(!(n>=100)) n=100; localStorage.setItem(counterKey, String(n)); }catch(e){ n = 100 + (Date.now()%900); }
+  return prefix + '-' + String(n);
 }
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -721,7 +721,7 @@ function submitListing(e){
   data.ownerPhone=document.getElementById('l_ownerPhone').value;
   if(type==='فروش'){ data.price=document.getElementById('l_price').value; }
   else if(type==='رهن و اجاره'){ data.deposit=document.getElementById('l_deposit').value; data.rent=document.getElementById('l_rent').value; data.convertible=document.getElementById('l_convertible').value; }
-  data.code = nextCode('AG','codeCounterListing');
+  data.code = nextCode('K','codeCounterListingK');
   data._schema = schema.map(fd=>({id:fd.id,type:fd.type,label:fd.label}));
   const list=load('listings'); list.unshift(data);
   if(!save('listings',list)){ showToast('ذخیره نشد! حافظه پر است، عکس کمتری انتخاب کن'); return false; }
@@ -775,7 +775,7 @@ function submitRequest(e){
   data.phone=document.getElementById('r_phone').value;
   if(type==='خرید'){ data.budget=document.getElementById('r_budget').value; }
   else if(type==='رهن و اجاره'){ data.deposit=document.getElementById('r_deposit').value; data.rent=document.getElementById('r_rent').value; }
-  data.code = nextCode('DR','codeCounterRequest');
+  data.code = nextCode('G','codeCounterRequestG');
   data._schema = schema.map(fd=>({id:fd.id,type:fd.type,label:fd.label}));
   const list=load('requests'); list.unshift(data);
   if(!save('requests',list)){ showToast('ذخیره نشد! دوباره تلاش کن'); return false; }
